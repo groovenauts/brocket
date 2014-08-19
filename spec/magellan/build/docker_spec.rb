@@ -15,12 +15,12 @@ describe Magellan::Build::Docker do
     end
 
     describe :config do
-      it{ expect(subject.config).to eq({"IMAGE_NAME" => image_name}) }
+      it{ expect(subject.config_hash).to eq({"IMAGE_NAME" => image_name}) }
     end
 
     describe :build do
       it do
-        expect(subject).to receive(:execute_command).with("docker build -t #{image_name}:#{version} .")
+        expect(subject).to receive(:sh).with("docker build -t #{image_name}:#{version} .")
         subject.build
       end
     end

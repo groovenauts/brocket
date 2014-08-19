@@ -12,33 +12,32 @@ module Magellan
 
       desc "config [DIRECTORY]", "show configurations in Dockerfile"
       def config(dir = nil)
-        fileutils.chdir(dir || ".") do
-          content = read_file
-          lines = content.lines.select{|line| line =~ MGB_LINE_HEADER}.
-            map{|line| line.sub(MGB_LINE_HEADER, "")}
-          r = YAML.load(lines.join("\n"))
-          $stdout.puts(YAML.dump(r))
-          return r
-        end
+        $stdout.puts(YAML.dump(config_hash(dir)))
       end
 
       desc "build [DIRECTORY]", "build docker image at DIRECTORY or PWD"
       def build(dir = nil)
-        c = config(dir)
-        fileutils.chdir(dir || ".") do
+        dir ||= "."
+        c = config_hash(dir)
+        fileutils.chdir(dir) do
           cmd = "docker build -t #{c['IMAGE_NAME']}:#{VersionFile.current} ."
-          execute_command(cmd)
+          sh(cmd)
         end
       end
 
       no_commands do
-        def read_file
-          File.read("Dockerfile")
+        def config_hash(dir = nil)
+          dir ||= "."
+          fileutils.chdir(dir) do
+            content = read_file
+            lines = content.lines.select{|line| line =~ MGB_LINE_HEADER}.
+              map{|line| line.sub(MGB_LINE_HEADER, "")}
+            return YAML.load(lines.join("\n"))
+          end
         end
 
-        def execute_command(cmd)
-          # http://docs.ruby-lang.org/ja/2.0.0/class/Kernel.html#M_SYSTEM
-          exit($?) unless system(cmd)
+        def read_file
+          File.read("Dockerfile")
         end
       end
 
