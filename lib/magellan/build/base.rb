@@ -37,11 +37,11 @@ module Magellan
             block.call(outbuf) if block
             ["DRYRUN", 0]
           else
-          outbuf = `#{cmd}`
-          if $? == 0
-            block.call(outbuf) if block
-          end
-          [outbuf, $?]
+            outbuf = `#{cmd}`
+            if $? == 0
+              block.call(outbuf) if block
+            end
+            [outbuf, $?]
           end
         end
 
