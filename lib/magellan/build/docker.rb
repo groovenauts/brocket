@@ -3,8 +3,6 @@ require "magellan/build"
 require 'yaml'
 require 'thor'
 
-require 'fileutils'
-
 module Magellan
   module Build
     class Docker < Base
@@ -22,7 +20,7 @@ module Magellan
         dir ||= "."
         c = config_hash(dir)
         img_name = config_image_name(c)
-        fileutils.chdir(dir) do
+        chdir(dir) do
           cmd = "docker build -t #{img_name}:#{VersionFile.current} ."
           setup = (c['SETUP'] || '').strip
           cmd = "#{setup} && #{cmd}" unless setup.empty?
@@ -47,7 +45,7 @@ module Magellan
 
         def config_hash(dir = nil)
           dir ||= "."
-          fileutils.chdir(dir) do
+          chdir(dir) do
             content = read_file
             lines = content.lines.select{|line| line =~ CONFIG_LINE_HEADER}.
               map{|line| line.sub(CONFIG_LINE_HEADER, "")}

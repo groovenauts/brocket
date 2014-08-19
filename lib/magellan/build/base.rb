@@ -1,7 +1,6 @@
 require "magellan/build"
 
 require 'thor'
-require 'fileutils'
 
 module Magellan
   module Build
@@ -10,9 +9,6 @@ module Magellan
       class_option :dryrun , :type => :boolean
 
       no_commands do
-        def fileutils
-          verbose? ? FileUtils::Verbose : FileUtils
-        end
 
         def dryrun?
           (options || {})[:dryrun]
@@ -22,6 +18,17 @@ module Magellan
           (options || {})[:verbose]
         end
 
+        def chdir(dir, &block)
+          dir ||= "."
+          verbose("cd #{dir}")
+          Dir.chdir(dir, &block)
+          verbose("cd #{Dir.pwd}")
+        end
+
+        def verbose(msg)
+          $stderr.puts("\e[34m#{msg}\e[0m") if verbose?
+        end
+
         def sh(cmd, &block)
           out, code = sh_with_code(cmd, &block)
           code == 0 ? out : raise(out.empty? ? "Running `#{cmd}' failed. Run this command directly for more detailed output." : out)
@@ -29,9 +36,7 @@ module Magellan
 
         def sh_with_code(cmd, &block)
           cmd << " 2>&1"
-          if verbose?
-            $stderr.puts("\e[34m#{cmd}\e[0m")
-          end
+          verbose(cmd)
           outbuf = ''
           if dryrun?
             block.call(outbuf) if block
