@@ -10,7 +10,7 @@ module Magellan
 
       no_commands do
         def fileutils
-          options[:verbose] ? FileUtils::Verbose : FileUtils
+          (options || {})[:verbose] ? FileUtils::Verbose : FileUtils
         end
 
         def sh(cmd, &block)
