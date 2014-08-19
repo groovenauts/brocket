@@ -1,10 +1,8 @@
 require "magellan/build"
 
-require 'thor'
-
 module Magellan
   module Build
-    class VersionFile < Thor
+    class VersionFile < Base
       FILENAME = "VERSION".freeze
       INITIAL_VERSION = "0.0.1".freeze
 

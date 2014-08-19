@@ -7,7 +7,7 @@ require 'fileutils'
 
 module Magellan
   module Build
-    class Docker < Thor
+    class Docker < Base
       MGB_LINE_HEADER = /\A\#\s*\[MGB\]\s*/.freeze
 
       desc "config [DIRECTORY]", "show configurations in Dockerfile"
@@ -32,10 +32,6 @@ module Magellan
       end
 
       no_commands do
-        def fileutils
-          FileUtils::Verbose
-        end
-
         def read_file
           File.read("Dockerfile")
         end
