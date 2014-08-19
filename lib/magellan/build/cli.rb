@@ -11,6 +11,24 @@ module Magellan
         VersionFile.new.init
       end
 
+      desc "bump", "bump up 3rd number in VERSION"
+      def bump
+        VersionFile.new.bump
+      end
+
+      desc "build", "build docker image"
+      def build
+        Docker.new.build
+      end
+
+      desc "release", "build docker image, tag it, push tag and push docker image to docker hub"
+      def release
+        Docker.new.build
+        Git.guard_clean
+        Git.push
+        Docker.new.push
+      end
+
       desc "version SUBCOMMAND ...ARGS", "manage VERSION file"
       subcommand "version", VersionFile
 
