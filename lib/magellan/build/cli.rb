@@ -6,25 +6,25 @@ module Magellan
 
       desc "init", "initialize current directory"
       def init
-        VersionFile.new.init
+        sub(VersionFile).init
       end
 
       desc "bump", "bump up 3rd number in VERSION"
       def bump
-        VersionFile.new.bump
+        sub(VersionFile).bump
       end
 
       desc "build", "build docker image"
       def build
-        Docker.new.build
+        sub(Docker).build
       end
 
       desc "release [DIRECTORY]", "build docker image, tag it, push tag and push docker image to docker hub"
       def release(dir = nil)
-        Docker.new.build(dir)
-        Git.new.guard_clean
-        Git.new.push
-        Docker.new.push(dir)
+        sub(Docker).build(dir)
+        sub(Git).guard_clean
+        sub(Git).push
+        sub(Docker).push(dir)
       end
 
       desc "version SUBCOMMAND ...ARGS", "manage VERSION file"
@@ -35,6 +35,14 @@ module Magellan
 
       desc "git SUBCOMMAND ...ARGS", "manage git commit"
       subcommand "git", Git
+
+      no_commands do
+        def sub(klass)
+          task = klass.new
+          task.options = self.options
+          task
+        end
+      end
 
     end
   end

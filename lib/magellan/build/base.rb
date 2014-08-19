@@ -15,11 +15,11 @@ module Magellan
         end
 
         def dryrun?
-          (Base.class_options || {})[:dryrun]
+          (options || {})[:dryrun]
         end
 
         def verbose?
-          (Base.class_options || {})[:verbose]
+          (options || {})[:verbose]
         end
 
         def sh(cmd, &block)
@@ -30,7 +30,7 @@ module Magellan
         def sh_with_code(cmd, &block)
           cmd << " 2>&1"
           if verbose?
-            $stderr.puts(cmd)
+            $stderr.puts("\e[34m#{cmd}\e[0m")
           end
           outbuf = ''
           if dryrun?
