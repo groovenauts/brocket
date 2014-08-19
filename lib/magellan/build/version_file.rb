@@ -6,10 +6,11 @@ module Magellan
   module Build
     class VersionFile < Thor
       FILENAME = "VERSION".freeze
+      INITIAL_VERSION = "0.0.1".freeze
 
-      desc "init", "initialize VERSION file in current directory"
-      def init
-        File.open(FILENAME, "w"){|f| f.puts("0.0.1") }
+      desc "init [VERSION]", "initialize VERSION file in current directory"
+      def init(version = nil)
+        write_file(version || INITIAL_VERSION)
       end
 
       desc "major [NUMBER]", "bump up major version of VERSION file"

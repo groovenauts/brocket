@@ -4,6 +4,19 @@ describe Magellan::Build::VersionFile do
 
   let(:subject){ Magellan::Build::VersionFile.new }
 
+  describe :init do
+    it :without_arg do
+      expect(subject).to receive(:write_file).with("0.0.1")
+      subject.init
+    end
+
+    it :with_arg do
+      expect(subject).to receive(:write_file).with("1.2.3")
+      subject.init("1.2.3")
+    end
+  end
+
+
   {
     major: {
       without_arg: "2.2.3",
