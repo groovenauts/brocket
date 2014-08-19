@@ -22,7 +22,7 @@ module Magellan
         dir ||= "."
         c = config_hash(dir)
         img_name = (c['IMAGE_NAME'] || '').strip
-        raise "No IMAGE_NAME found in #{dir}/Dockerfile. Please add `# #{CONFIG_LINE_SEP} IMAGE_NAME: image_name_on_dockerhub` in #{dir}/Dockerfile" if img_name.empty?
+        raise "No IMAGE_NAME found in #{dir}/Dockerfile. Please add `# #{CONFIG_LINE_SEP} IMAGE_NAME: <<IMAGE NAME on DockerHub>>` in #{dir}/Dockerfile" if img_name.empty?
         fileutils.chdir(dir) do
           cmd = "docker build -t #{}:#{VersionFile.current} ."
           sh(cmd)
