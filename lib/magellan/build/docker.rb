@@ -32,7 +32,7 @@ module Magellan
             content = read_file
             lines = content.lines.select{|line| line =~ MGB_LINE_HEADER}.
               map{|line| line.sub(MGB_LINE_HEADER, "")}
-            return YAML.load(lines.join("\n"))
+            return (YAML.load(lines.join("\n")) || {})
           end
         end
 
