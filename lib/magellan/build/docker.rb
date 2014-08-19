@@ -8,7 +8,7 @@ require 'fileutils'
 module Magellan
   module Build
     class Docker < Base
-      CONFIG_LINE_SEP = "[MSG]".freeze
+      CONFIG_LINE_SEP = "[MGB]".freeze
 
       CONFIG_LINE_HEADER = /\A\#\s*#{Regexp.escape(CONFIG_LINE_SEP)}\s*/.freeze
 
@@ -24,7 +24,7 @@ module Magellan
         img_name = (c['IMAGE_NAME'] || '').strip
         raise "No IMAGE_NAME found in #{dir}/Dockerfile. Please add `# #{CONFIG_LINE_SEP} IMAGE_NAME: <<IMAGE NAME on DockerHub>>` in #{dir}/Dockerfile" if img_name.empty?
         fileutils.chdir(dir) do
-          cmd = "docker build -t #{}:#{VersionFile.current} ."
+          cmd = "docker build -t #{img_name}:#{VersionFile.current} ."
           sh(cmd)
         end
       end
