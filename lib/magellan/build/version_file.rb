@@ -28,7 +28,11 @@ module Magellan
 
       class << self
         def current
-          File.read(FILENAME).strip
+          if File.readable?(FILENAME)
+            File.read(FILENAME).strip
+          else
+            raise "File not found #{FILENAME}. You can run `#{$0} init`"
+          end
         end
       end
 
