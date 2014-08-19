@@ -11,6 +11,11 @@ module Magellan
         write_file(version || INITIAL_VERSION)
       end
 
+      desc "show", "show VERSION"
+      def show
+        $stdout.puts(read_file)
+      end
+
       desc "major [NUMBER]", "bump up major version of VERSION file"
       def major(num = nil)
         bump_on(0, num)
