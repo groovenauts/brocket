@@ -1,3 +1,5 @@
 #!/usr/bin/env ruby
 
 require 'magellan/build'
+
+Magellan::Build::Cli.start(ARGV)
