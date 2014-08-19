@@ -28,8 +28,14 @@ module Magellan
         bump_on(2, num)
       end
 
+      class << self
+        def current
+          File.read(FILENAME).strip
+        end
+      end
+
       def read_file
-        File.read(FILENAME).strip
+        self.class.current
       end
       private :read_file
 
