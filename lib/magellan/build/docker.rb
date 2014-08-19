@@ -10,7 +10,7 @@ module Magellan
     class Docker < Base
       CONFIG_LINE_SEP = "[MSG]".freeze
 
-      MGB_LINE_HEADER = /\A\#\s*#{Regexp.escape(CONFIG_LINE_SEP)}\s*/.freeze
+      CONFIG_LINE_HEADER = /\A\#\s*#{Regexp.escape(CONFIG_LINE_SEP)}\s*/.freeze
 
       desc "config [DIRECTORY]", "show configurations in Dockerfile"
       def config(dir = nil)
@@ -34,8 +34,8 @@ module Magellan
           dir ||= "."
           fileutils.chdir(dir) do
             content = read_file
-            lines = content.lines.select{|line| line =~ MGB_LINE_HEADER}.
-              map{|line| line.sub(MGB_LINE_HEADER, "")}
+            lines = content.lines.select{|line| line =~ CONFIG_LINE_HEADER}.
+              map{|line| line.sub(CONFIG_LINE_HEADER, "")}
             return (YAML.load(lines.join("\n")) || {})
           end
         end
