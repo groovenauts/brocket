@@ -1,10 +1,8 @@
 require "magellan/build"
 
-require 'thor'
-
 module Magellan
   module Build
-    class Cli < Thor
+    class Cli < Base
 
       desc "init", "initialize current directory"
       def init
