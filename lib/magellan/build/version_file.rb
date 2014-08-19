@@ -34,6 +34,7 @@ module Magellan
         end
       end
 
+      no_commands do
       def read_file
         self.class.current
       end
@@ -55,6 +56,7 @@ module Magellan
         ver
       end
       private :bump_on
+      end
 
     end
   end

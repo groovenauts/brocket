@@ -31,6 +31,7 @@ module Magellan
         end
       end
 
+      no_commands do
       def fileutils
         FileUtils::Verbose
       end
@@ -42,6 +43,7 @@ module Magellan
       def execute_command(cmd)
         # http://docs.ruby-lang.org/ja/2.0.0/class/Kernel.html#M_SYSTEM
         exit($?) unless system(cmd)
+      end
       end
 
     end
