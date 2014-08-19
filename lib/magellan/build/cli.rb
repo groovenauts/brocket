@@ -21,8 +21,8 @@ module Magellan
 
       desc "release [DIRECTORY]", "build docker image, tag it, push tag and push docker image to docker hub"
       def release(dir = nil)
-        sub(Docker).build(dir)
         sub(Git).guard_clean
+        sub(Docker).build(dir)
         sub(Git).push
         sub(Docker).push(dir)
       end
