@@ -14,11 +14,11 @@ module Magellan
       desc "version SUBCOMMAND ...ARGS", "manage VERSION file"
       subcommand "version", VersionFile
 
-      desc "git SUBCOMMAND ...ARGS", "manage git commit"
-      subcommand "git", Git
+      # desc "git SUBCOMMAND ...ARGS", "manage git commit"
+      # subcommand "git", Git
 
-      desc "docker SUBCOMMAND ...ARGS", "manage docker"
-      subcommand "docker", Docker
+      # desc "docker SUBCOMMAND ...ARGS", "manage docker"
+      # subcommand "docker", Docker
 
     end
   end
