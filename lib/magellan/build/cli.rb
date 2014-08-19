@@ -19,12 +19,12 @@ module Magellan
         Docker.new.build
       end
 
-      desc "release", "build docker image, tag it, push tag and push docker image to docker hub"
-      def release
-        Docker.new.build
+      desc "release [DIRECTORY]", "build docker image, tag it, push tag and push docker image to docker hub"
+      def release(dir = nil)
+        Docker.new.build(dir)
         Git.new.guard_clean
         Git.new.push
-        Docker.new.push
+        Docker.new.push(dir)
       end
 
       desc "version SUBCOMMAND ...ARGS", "manage VERSION file"

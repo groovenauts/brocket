@@ -31,6 +31,16 @@ module Magellan
         end
       end
 
+      desc "push [DIRECTORY]", "push docker image to docker hub"
+      def push(dir = nil)
+        dir ||= "."
+        c = config_hash(dir)
+        img_name = (c['IMAGE_NAME'] || '').strip
+        raise "No IMAGE_NAME found in #{dir}/Dockerfile. Please add `# #{CONFIG_LINE_SEP} IMAGE_NAME: [IMAGE NAME on DockerHub]` in #{dir}/Dockerfile" if img_name.empty?
+        cmd = "docker push #{img_name}:#{VersionFile.current}"
+        sh(cmd)
+      end
+
       no_commands do
         def config_hash(dir = nil)
           dir ||= "."
