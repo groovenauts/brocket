@@ -25,8 +25,7 @@ module Magellan
         end
 
         def tag_version
-          version_tag = version = VersionFile.current
-          sh "git tag -a -m \"Version #{version}\" #{version_tag}"
+          sh "git tag -a -m \"Version #{version_tag}\" #{version_tag}"
           $stdout.puts "Tagged #{version_tag}."
           yield if block_given?
         rescue
@@ -52,6 +51,10 @@ module Magellan
             $stderr.puts "Tag #{version_tag} has already been created."
             true
           end
+        end
+
+        def version_tag
+          VersionFile.current
         end
 
       end
