@@ -17,8 +17,8 @@ module Magellan
       desc "docker SUBCOMMAND ...ARGS", "manage docker"
       subcommand "docker", Docker
 
-      # desc "git SUBCOMMAND ...ARGS", "manage git commit"
-      # subcommand "git", Git
+      desc "git SUBCOMMAND ...ARGS", "manage git commit"
+      subcommand "git", Git
 
     end
   end
