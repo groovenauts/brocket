@@ -8,7 +8,7 @@ require 'fileutils'
 module Magellan
   module Build
     class Docker < Base
-      CONFIG_LINE_SEP = "[MGB]".freeze
+      CONFIG_LINE_SEP = "[config]".freeze
 
       CONFIG_LINE_HEADER = /\A\#\s*#{Regexp.escape(CONFIG_LINE_SEP)}\s*/.freeze
 

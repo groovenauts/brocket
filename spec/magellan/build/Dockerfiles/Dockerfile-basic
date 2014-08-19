@@ -1,5 +1,5 @@
 #
-# [MGB] IMAGE_NAME: "groovenauts/rails-example"
+# [config] IMAGE_NAME: "groovenauts/rails-example"
 #
 
 FROM groovenauts/ruby:2.1.2
