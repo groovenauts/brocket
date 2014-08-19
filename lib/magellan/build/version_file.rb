@@ -35,27 +35,27 @@ module Magellan
       end
 
       no_commands do
-      def read_file
-        self.class.current
-      end
-      private :read_file
+        def read_file
+          self.class.current
+        end
+        private :read_file
 
-      def write_file(version)
-        File.open(FILENAME, "w"){|f| f.puts(version) }
-      end
-      private :write_file
+        def write_file(version)
+          File.open(FILENAME, "w"){|f| f.puts(version) }
+        end
+        private :write_file
 
-      def bump_on(pos, num)
-        current = read_file
-        body, suffix = current.split(/-/, 2)
-        parts = body.split(/\./)
-        parts[pos] = num || (parts[pos].to_i + 1).to_s
-        ver = parts.join(".")
-        ver << "-" << suffix if suffix
-        write_file(ver)
-        ver
-      end
-      private :bump_on
+        def bump_on(pos, num)
+          current = read_file
+          body, suffix = current.split(/-/, 2)
+          parts = body.split(/\./)
+          parts[pos] = num || (parts[pos].to_i + 1).to_s
+          ver = parts.join(".")
+          ver << "-" << suffix if suffix
+          write_file(ver)
+          ver
+        end
+        private :bump_on
       end
 
     end

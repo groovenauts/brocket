@@ -32,18 +32,18 @@ module Magellan
       end
 
       no_commands do
-      def fileutils
-        FileUtils::Verbose
-      end
+        def fileutils
+          FileUtils::Verbose
+        end
 
-      def read_file
-        File.read("Dockerfile")
-      end
+        def read_file
+          File.read("Dockerfile")
+        end
 
-      def execute_command(cmd)
-        # http://docs.ruby-lang.org/ja/2.0.0/class/Kernel.html#M_SYSTEM
-        exit($?) unless system(cmd)
-      end
+        def execute_command(cmd)
+          # http://docs.ruby-lang.org/ja/2.0.0/class/Kernel.html#M_SYSTEM
+          exit($?) unless system(cmd)
+        end
       end
 
     end
