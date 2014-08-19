@@ -21,8 +21,7 @@ module Magellan
       def build(dir = nil)
         dir ||= "."
         c = config_hash(dir)
-        img_name = (c['IMAGE_NAME'] || '').strip
-        raise "No IMAGE_NAME found in #{dir}/Dockerfile. Please add `# #{CONFIG_LINE_SEP} IMAGE_NAME: [IMAGE NAME on DockerHub]` in #{dir}/Dockerfile" if img_name.empty?
+        img_name = config_image_name(c)
         fileutils.chdir(dir) do
           cmd = "docker build -t #{img_name}:#{VersionFile.current} ."
           setup = (c['SETUP'] || '').strip
@@ -33,15 +32,19 @@ module Magellan
 
       desc "push [DIRECTORY]", "push docker image to docker hub"
       def push(dir = nil)
-        dir ||= "."
-        c = config_hash(dir)
-        img_name = (c['IMAGE_NAME'] || '').strip
-        raise "No IMAGE_NAME found in #{dir}/Dockerfile. Please add `# #{CONFIG_LINE_SEP} IMAGE_NAME: [IMAGE NAME on DockerHub]` in #{dir}/Dockerfile" if img_name.empty?
+        c = config_hash(dir || ".")
+        img_name = config_image_name(c)
         cmd = "docker push #{img_name}:#{VersionFile.current}"
         sh(cmd)
       end
 
       no_commands do
+        def config_image_name(c)
+          img_name = (c['IMAGE_NAME'] || '').strip
+          raise "No IMAGE_NAME found in #{dir}/Dockerfile. Please add `# #{CONFIG_LINE_SEP} IMAGE_NAME: [IMAGE NAME on DockerHub]` in #{dir}/Dockerfile" if img_name.empty?
+          img_name
+        end
+
         def config_hash(dir = nil)
           dir ||= "."
           fileutils.chdir(dir) do
