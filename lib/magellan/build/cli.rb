@@ -24,8 +24,8 @@ module Magellan
       desc "release", "build docker image, tag it, push tag and push docker image to docker hub"
       def release
         Docker.new.build
-        Git.guard_clean
-        Git.push
+        Git.new.guard_clean
+        Git.new.push
         Docker.new.push
       end
 
