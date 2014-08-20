@@ -7,5 +7,8 @@ module Magellan
     autoload :VersionFile,    "magellan/build/version_file"
     autoload :Git        ,    "magellan/build/git"
     autoload :Docker     ,    "magellan/build/docker"
+
+    class BuildError < StandardError
+    end
   end
 end

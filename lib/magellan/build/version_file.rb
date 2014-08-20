@@ -36,7 +36,7 @@ module Magellan
           if File.readable?(FILENAME)
             File.read(FILENAME).strip
           else
-            raise "File not found #{FILENAME}. You can run `#{$0} init`"
+            error "File not found #{FILENAME}. You can run `#{$0} init`"
           end
         end
       end

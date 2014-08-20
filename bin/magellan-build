@@ -2,4 +2,12 @@
 
 require 'magellan/build'
 
-Magellan::Build::Cli.start(ARGV)
+begin
+  Magellan::Build::Cli.start(ARGV)
+rescue Magellan::Build::BuildError => e
+  $stderr.puts("\e[31m#{e.message}\e[0m")
+  exit(1)
+rescue => e
+  $stderr.puts("\e[31m[#{e.class}] #{e.message}\e[0m\n  " << e.backtrace.join("\n  "))
+  exit(1)
+end

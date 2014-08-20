@@ -6,7 +6,7 @@ module Magellan
 
       desc "guard_clean", "Raise error if some difference exists."
       def guard_clean
-        clean? && committed? or raise("There are files that need to be committed first.")
+        clean? && committed? or error("There are files that need to be committed first. Run `git status`")
       end
 
       desc "push", "push commit and tag it"
@@ -43,7 +43,7 @@ module Magellan
         def perform_git_push(options = '')
           cmd = "git push #{options}"
           out, code = sh_with_code(cmd)
-          raise "Couldn't git push. `#{cmd}' failed with the following output:\n\n#{out}\n" unless code == 0
+          error "Couldn't git push. `#{cmd}' failed with the following output:\n\n#{out}\n" unless code == 0
         end
 
         def already_tagged?

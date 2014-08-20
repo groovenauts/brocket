@@ -29,9 +29,13 @@ module Magellan
           $stderr.puts("\e[34m#{msg}\e[0m") if verbose?
         end
 
+        def error(msg)
+          raise BuildError, msg
+        end
+
         def sh(cmd, &block)
           out, code = sh_with_code(cmd, &block)
-          code == 0 ? out : raise(out.empty? ? "Running `#{cmd}' failed. Run this command directly for more detailed output." : out)
+          code == 0 ? out : error(out.empty? ? "Running `#{cmd}' failed. Run this command directly for more detailed output." : out)
         end
 
         def sh_with_code(cmd, &block)
