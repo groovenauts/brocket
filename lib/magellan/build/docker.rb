@@ -7,8 +7,7 @@ module Magellan
   module Build
     class Docker < Base
       CONFIG_LINE_SEP = "[config]".freeze
-
-      CONFIG_LINE_HEADER = /\A\#\s*#{Regexp.escape(CONFIG_LINE_SEP)}\s*/.freeze
+      CONFIG_LINE_HEADER = /\A\#\s*#{Regexp.escape(CONFIG_LINE_SEP)}\s?/.freeze
 
       desc "config [DIRECTORY]", "show configurations in Dockerfile"
       def config(dir = nil)
@@ -21,10 +20,15 @@ module Magellan
         c = config_hash(dir)
         img_name = config_image_name(c)
         chdir(dir) do
-          cmd = "docker build -t #{img_name}:#{VersionFile.current} ."
-          setup = (c['SETUP'] || '').strip
-          cmd = "#{setup} && #{cmd}" unless setup.empty?
-          sh(cmd)
+          begin
+            execute(c['BEFORE_BUILD'])
+            execute("docker build -t #{img_name}:#{VersionFile.current} .")
+            execute(c['ON_BUILD_COMPLETE'])
+          rescue
+            execute(c['ON_BUILD_ERROR'])
+          ensure
+            execute(c['AFTER_BUILD'])
+          end
         end
       end
 
@@ -55,6 +59,13 @@ module Magellan
 
         def read_file
           File.read("Dockerfile")
+        end
+
+        def execute(commands)
+          return unless commands
+          commands = commands.is_a?(Array) ? commands : [commands]
+          commands = commands.compact.map(&:strip).reject(&:empty?)
+          commands.each{|cmd| sh(cmd) }
         end
       end
 
