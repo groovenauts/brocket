@@ -60,7 +60,9 @@ module BRocket
       end
 
       def version_tag
-        @version_tag ||= sub(VersionFile).current
+        prefix = sub(Docker).config_hash["GIT_TAG_PREFIX"] || ""
+        version = sub(VersionFile).current
+        "%s%s" % [prefix, version]
       end
 
     end
