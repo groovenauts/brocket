@@ -35,7 +35,7 @@ module BRocket
         if File.readable?(FILENAME)
           File.read(FILENAME).strip
         else
-          error "File not found #{FILENAME}. You can run `#{$0} init`"
+          raise BuildError, "File not found #{FILENAME}. You can run `#{$0} init`"
         end
       end
     end
