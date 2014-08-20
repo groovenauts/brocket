@@ -17,17 +17,17 @@ module BRocket
 
     desc "major [NUMBER]", "bump up major version of VERSION file"
     def major(num = nil)
-      bump_on(0, num)
+      bump_on(:major, num)
     end
 
     desc "minor [NUMBER]", "bump up minor version of VERSION file"
     def minor(num = nil)
-      bump_on(1, num)
+      bump_on(:minor, num)
     end
 
     desc "bump [NUMBER]", "bump up last number of VERSION file"
     def bump(num = nil)
-      bump_on(2, num)
+      bump_on(:patch, num)
     end
 
     class << self
@@ -51,16 +51,21 @@ module BRocket
       end
       private :write_file
 
+      POS_TO_IDX = {major: 0, minor: 1, patch: 2}.freeze
+
       def bump_on(pos, num)
         sub(Git).guard_clean
         current = read_file
         body, suffix = current.split(/-/, 2)
         parts = body.split(/\./)
-        parts[pos] = num || (parts[pos].to_i + 1).to_s
+        idx = POS_TO_IDX[pos]
+        error "Invalid position #{pos.inspect}" unless idx
+        parts[idx] = num || (parts[idx].to_i + 1).to_s
         ver = parts.join(".")
         ver << "-" << suffix if suffix
         write_file(ver)
-        sub(Git).commit(FILENAME, "bump up version")
+        sub(Git).commit(FILENAME, "bump up #{pos.to_s} version: #{ver}")
+        success("[git #{pos.to_s}] #{ver}")
         ver
       end
       private :bump_on

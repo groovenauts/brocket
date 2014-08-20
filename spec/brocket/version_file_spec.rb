@@ -34,14 +34,18 @@ describe BRocket::VersionFile do
 
     describe method_name do
       it :without_arg do
+        allow_any_instance_of(BRocket::Git).to receive(:guard_clean)
         allow(subject).to receive(:read_file).and_return("1.2.3")
         expect(subject).to receive(:write_file).with(patterns[:without_arg])
+        allow_any_instance_of(BRocket::Git).to receive(:commit).with("VERSION", instance_of(String))
         subject.send(method_name)
       end
 
       it :with_arg do
+        allow_any_instance_of(BRocket::Git).to receive(:guard_clean)
         allow(subject).to receive(:read_file).and_return("1.2.3")
         expect(subject).to receive(:write_file).with(patterns[:with_arg])
+        allow_any_instance_of(BRocket::Git).to receive(:commit).with("VERSION", instance_of(String))
         subject.send(method_name, "5")
       end
     end
