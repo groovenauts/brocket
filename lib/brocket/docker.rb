@@ -26,6 +26,7 @@ module BRocket
           execute(c['ON_BUILD_COMPLETE'])
         rescue
           execute(c['ON_BUILD_ERROR'])
+          raise
         ensure
           execute(c['AFTER_BUILD'])
         end

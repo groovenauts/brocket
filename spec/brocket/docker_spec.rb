@@ -62,13 +62,16 @@ describe BRocket::Docker do
       end
 
       it :error do
+        error_msg = "build error"
         expect(subject).to receive(:sh).with("abc")
         expect(subject).to receive(:sh).with("def ghi")
-        expect(subject).to receive(:sh).with("docker build -t #{image_name}:#{version} .").and_raise("build error")
+        expect(subject).to receive(:sh).with("docker build -t #{image_name}:#{version} .").and_raise(error_msg)
         expect(subject).to receive(:sh).with("baz") # not "foo bar"
         expect(subject).to receive(:sh).with("jkl")
         expect(subject).to receive(:sh).with("mno")
-        subject.build
+        expect{
+          subject.build
+        }.to raise_error(error_msg)
       end
     end
   end
