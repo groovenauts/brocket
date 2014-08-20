@@ -29,6 +29,13 @@ module Magellan
           $stderr.puts("\e[34m#{msg}\e[0m") if verbose?
         end
 
+        def info(msg)
+          $stderr.puts(msg)
+        end
+        def success(msg)
+          $stderr.puts("\e[32m#{msg}\e[0m")
+        end
+
         def error(msg)
           raise BuildError, msg
         end

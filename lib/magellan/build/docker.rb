@@ -16,6 +16,7 @@ module Magellan
 
       desc "build [DIRECTORY]", "build docker image at DIRECTORY or PWD"
       def build(dir = nil)
+        info("[docker build] starting")
         dir ||= "."
         c = config_hash(dir)
         img_name = config_image_name(c)
@@ -30,14 +31,17 @@ module Magellan
             execute(c['AFTER_BUILD'])
           end
         end
+        success("[docker build] OK")
       end
 
       desc "push [DIRECTORY]", "push docker image to docker hub"
       def push(dir = nil)
+        info("[docker push] starting")
         c = config_hash(dir || ".")
         img_name = config_image_name(c)
         cmd = "docker push #{img_name}:#{VersionFile.current}"
         sh(cmd)
+        success("[docker push] OK")
       end
 
       no_commands do

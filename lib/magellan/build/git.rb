@@ -7,11 +7,14 @@ module Magellan
       desc "guard_clean", "Raise error if some difference exists."
       def guard_clean
         clean? && committed? or error("There are files that need to be committed first. Run `git status`")
+        success("[git guard_clean] OK")
       end
 
       desc "push", "push commit and tag it"
       def push
+        info("[git push] starting")
         tag_version { git_push } unless already_tagged?
+        success("[git push] OK")
       end
 
       no_commands do
