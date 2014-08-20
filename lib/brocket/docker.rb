@@ -18,17 +18,17 @@ module BRocket
       info("[docker build] starting")
       c = config_hash
       img_name = config_image_name(c)
-        begin
-          execute(c['BEFORE_BUILD'])
-          version = sub(VersionFile).current
-          execute("docker build -t #{img_name}:#{version} .")
-          execute(c['ON_BUILD_COMPLETE'])
-        rescue
-          execute(c['ON_BUILD_ERROR'])
-          raise
-        ensure
-          execute(c['AFTER_BUILD'])
-        end
+      begin
+        execute(c['BEFORE_BUILD'])
+        version = sub(VersionFile).current
+        execute("docker build -t #{img_name}:#{version} .")
+        execute(c['ON_BUILD_COMPLETE'])
+      rescue
+        execute(c['ON_BUILD_ERROR'])
+        raise
+      ensure
+        execute(c['AFTER_BUILD'])
+      end
       success("[docker build] OK")
     end
 
@@ -51,10 +51,10 @@ module BRocket
       end
 
       def config_hash
-          content = read_file
-          lines = content.lines.select{|line| line =~ CONFIG_LINE_HEADER}.
-            map{|line| line.sub(CONFIG_LINE_HEADER, "")}
-          return (YAML.load(lines.join("\n")) || {})
+        content = read_file
+        lines = content.lines.select{|line| line =~ CONFIG_LINE_HEADER}.
+          map{|line| line.sub(CONFIG_LINE_HEADER, "")}
+        return (YAML.load(lines.join("\n")) || {})
       end
 
       def read_file
