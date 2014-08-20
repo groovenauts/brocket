@@ -8,21 +8,20 @@ module BRocket
     CONFIG_LINE_SEP = "[config]".freeze
     CONFIG_LINE_HEADER = /\A\#\s*#{Regexp.escape(CONFIG_LINE_SEP)}\s?/.freeze
 
-    desc "config [DIRECTORY]", "show configurations in Dockerfile"
-    def config(dir = nil)
-      $stdout.puts(YAML.dump(config_hash(dir)))
+    desc "config", "show configurations in Dockerfile"
+    def config
+      $stdout.puts(YAML.dump(config_hash))
     end
 
-    desc "build [DIRECTORY]", "build docker image at DIRECTORY or PWD"
-    def build(dir = nil)
+    desc "build", "build docker image"
+    def build
       info("[docker build] starting")
-      dir ||= "."
-      c = config_hash(dir)
+      c = config_hash
       img_name = config_image_name(c)
-      chdir(dir) do
         begin
           execute(c['BEFORE_BUILD'])
-          execute("docker build -t #{img_name}:#{VersionFile.current} .")
+          version = sub(VersionFile).current
+          execute("docker build -t #{img_name}:#{version} #{dir}")
           execute(c['ON_BUILD_COMPLETE'])
         rescue
           execute(c['ON_BUILD_ERROR'])
@@ -30,16 +29,16 @@ module BRocket
         ensure
           execute(c['AFTER_BUILD'])
         end
-      end
       success("[docker build] OK")
     end
 
-    desc "push [DIRECTORY]", "push docker image to docker hub"
-    def push(dir = nil)
+    desc "push", "push docker image to docker hub"
+    def push
       info("[docker push] starting")
-      c = config_hash(dir || ".")
+      c = config_hash
       img_name = config_image_name(c)
-      cmd = "docker push #{img_name}:#{VersionFile.current}"
+      version = sub(VersionFile).current
+      cmd = "docker push #{img_name}:#{version}"
       sh(cmd)
       success("[docker push] OK")
     end
@@ -51,18 +50,15 @@ module BRocket
         img_name
       end
 
-      def config_hash(dir = nil)
-        dir ||= "."
-        chdir(dir) do
+      def config_hash
           content = read_file
           lines = content.lines.select{|line| line =~ CONFIG_LINE_HEADER}.
             map{|line| line.sub(CONFIG_LINE_HEADER, "")}
           return (YAML.load(lines.join("\n")) || {})
-        end
       end
 
       def read_file
-        File.read("Dockerfile")
+        File.read(File.join(dir, "Dockerfile"))
       end
 
       def execute(commands)
