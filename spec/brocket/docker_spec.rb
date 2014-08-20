@@ -10,8 +10,8 @@ describe BRocket::Docker do
     let(:version){ "2.3.4" }
 
     before do
-      allow(subject).to receive(:read_file).with(any_args).and_return(File.read(filepath))
-      allow(BRocket::VersionFile).to receive(:current).and_return(version)
+      allow(subject).to receive(:read_config_file).with(any_args).and_return(File.read(filepath))
+      allow_any_instance_of(BRocket::VersionFile).to receive(:current).and_return(version)
     end
 
     describe :config do
@@ -33,8 +33,8 @@ describe BRocket::Docker do
     let(:version){ "2.3.4" }
 
     before do
-      allow(subject).to receive(:read_file).with(any_args).and_return(File.read(filepath))
-      allow(BRocket::VersionFile).to receive(:current).and_return(version)
+      allow(subject).to receive(:read_config_file).with(any_args).and_return(File.read(filepath))
+      allow_any_instance_of(BRocket::VersionFile).to receive(:current).and_return(version)
     end
 
     describe :config do
@@ -62,13 +62,16 @@ describe BRocket::Docker do
       end
 
       it :error do
+        error_msg = "build error"
         expect(subject).to receive(:sh).with("abc")
         expect(subject).to receive(:sh).with("def ghi")
-        expect(subject).to receive(:sh).with("docker build -t #{image_name}:#{version} .").and_raise("build error")
+        expect(subject).to receive(:sh).with("docker build -t #{image_name}:#{version} .").and_raise(error_msg)
         expect(subject).to receive(:sh).with("baz") # not "foo bar"
         expect(subject).to receive(:sh).with("jkl")
         expect(subject).to receive(:sh).with("mno")
-        subject.build
+        expect{
+          subject.build
+        }.to raise_error(error_msg)
       end
     end
   end

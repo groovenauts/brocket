@@ -18,12 +18,12 @@ module BRocket
       sub(Docker).build
     end
 
-    desc "release [DIRECTORY]", "build docker image, tag it, push tag and push docker image to docker hub"
-    def release(dir = nil)
+    desc "release", "build docker image, tag it, push tag and push docker image to docker hub"
+    def release
       sub(Git).guard_clean
-      sub(Docker).build(dir)
+      sub(Docker).build
       sub(Git).push
-      sub(Docker).push(dir)
+      sub(Docker).push
     end
 
     desc "version SUBCOMMAND ...ARGS", "manage VERSION file"

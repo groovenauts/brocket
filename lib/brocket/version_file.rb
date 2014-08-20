@@ -5,7 +5,7 @@ module BRocket
     FILENAME = "VERSION".freeze
     INITIAL_VERSION = "0.0.1".freeze
 
-    desc "init [VERSION]", "initialize VERSION file in current directory"
+    desc "init [VERSION]", "initialize VERSION file in directory for docker"
     def init(version = nil)
       write_file(version || INITIAL_VERSION)
     end
@@ -30,24 +30,22 @@ module BRocket
       bump_on(:patch, num)
     end
 
-    class << self
-      def current
-        if File.readable?(FILENAME)
-          File.read(FILENAME).strip
+    no_commands do
+      def filepath
+        FILENAME
+      end
+
+      def read_file
+        if File.readable?(filepath)
+          File.read(filepath).strip
         else
-          error "File not found #{FILENAME}. You can run `#{$0} init`"
+          raise BuildError, "File not found #{filepath}. You can run `#{$0} init`"
         end
       end
-    end
-
-    no_commands do
-      def read_file
-        self.class.current
-      end
-      private :read_file
+      alias_method :current, :read_file
 
       def write_file(version)
-        File.open(FILENAME, "w"){|f| f.puts(version) }
+        File.open(filepath, "w"){|f| f.puts(version) }
       end
       private :write_file
 
@@ -64,7 +62,7 @@ module BRocket
         ver = parts.join(".")
         ver << "-" << suffix if suffix
         write_file(ver)
-        sub(Git).commit(FILENAME, "bump up #{pos.to_s} version: #{ver}")
+        sub(Git).commit(filepath, "bump up #{pos.to_s} version: #{ver}")
         success("[git #{pos.to_s}] #{ver}")
         ver
       end

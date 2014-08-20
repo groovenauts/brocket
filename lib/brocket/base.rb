@@ -4,8 +4,8 @@ require 'thor'
 
 module BRocket
   class Base < Thor
-    class_option :verbose, :type => :boolean
-    class_option :dryrun , :type => :boolean
+    class_option :verbose, type: :boolean, aliases: "-V"
+    class_option :dryrun , type: :boolean, aliases: "-D"
 
     no_commands do
 
@@ -15,19 +15,16 @@ module BRocket
         task
       end
 
+      def opts
+        @opts ||= options || {}
+      end
+
       def dryrun?
-        (options || {})[:dryrun]
+        opts[:dryrun]
       end
 
       def verbose?
-        (options || {})[:verbose]
-      end
-
-      def chdir(dir, &block)
-        dir ||= "."
-        verbose("cd #{dir}")
-        Dir.chdir(dir, &block)
-        verbose("cd #{Dir.pwd}")
+        opts[:verbose]
       end
 
       def verbose(msg)
