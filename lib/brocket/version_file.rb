@@ -32,7 +32,7 @@ module BRocket
 
     no_commands do
       def filepath
-        File.join(dir, FILENAME)
+        FILENAME
       end
 
       def read_file

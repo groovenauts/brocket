@@ -6,7 +6,6 @@ module BRocket
   class Base < Thor
     class_option :verbose, type: :boolean, aliases: "-V"
     class_option :dryrun , type: :boolean, aliases: "-D"
-    class_option :dir    , type: :string , aliases: "-d", default: ".", desc: "path to dir of Dockerfile"
 
     no_commands do
 
@@ -26,10 +25,6 @@ module BRocket
 
       def verbose?
         opts[:verbose]
-      end
-
-      def dir
-        opts[:dir]
       end
 
       def verbose(msg)

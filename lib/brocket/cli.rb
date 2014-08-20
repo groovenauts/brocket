@@ -3,7 +3,7 @@ require "brocket"
 module BRocket
   class Cli < Base
 
-    desc "init", "initialize directory for docker"
+    desc "init", "initialize current directory"
     def init
       sub(VersionFile).init
     end

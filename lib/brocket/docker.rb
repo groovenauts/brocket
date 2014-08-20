@@ -21,7 +21,7 @@ module BRocket
         begin
           execute(c['BEFORE_BUILD'])
           version = sub(VersionFile).current
-          execute("docker build -t #{img_name}:#{version} #{dir}")
+          execute("docker build -t #{img_name}:#{version} .")
           execute(c['ON_BUILD_COMPLETE'])
         rescue
           execute(c['ON_BUILD_ERROR'])
@@ -46,7 +46,7 @@ module BRocket
     no_commands do
       def config_image_name(c)
         img_name = (c['IMAGE_NAME'] || '').strip
-        error "No IMAGE_NAME found in #{dir}/Dockerfile. Please add `# #{CONFIG_LINE_SEP} IMAGE_NAME: [IMAGE NAME on DockerHub]` in #{dir}/Dockerfile" if img_name.empty?
+        error "No IMAGE_NAME found in Dockerfile. Please add `# #{CONFIG_LINE_SEP} IMAGE_NAME: [IMAGE NAME on DockerHub]` in Dockerfile" if img_name.empty?
         img_name
       end
 
@@ -58,7 +58,7 @@ module BRocket
       end
 
       def read_file
-        File.read(File.join(dir, "Dockerfile"))
+        File.read("Dockerfile")
       end
 
       def execute(commands)
