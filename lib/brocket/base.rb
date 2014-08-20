@@ -9,6 +9,12 @@ module BRocket
 
     no_commands do
 
+      def sub(klass)
+        task = klass.new
+        task.options = self.options
+        task
+      end
+
       def dryrun?
         (options || {})[:dryrun]
       end

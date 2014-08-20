@@ -35,13 +35,5 @@ module BRocket
     desc "git SUBCOMMAND ...ARGS", "manage git commit"
     subcommand "git", Git
 
-    no_commands do
-      def sub(klass)
-        task = klass.new
-        task.options = self.options
-        task
-      end
-    end
-
   end
 end
