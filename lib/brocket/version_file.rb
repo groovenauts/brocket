@@ -52,6 +52,7 @@ module BRocket
       private :write_file
 
       def bump_on(pos, num)
+        sub(Git).guard_clean
         current = read_file
         body, suffix = current.split(/-/, 2)
         parts = body.split(/\./)
@@ -59,6 +60,7 @@ module BRocket
         ver = parts.join(".")
         ver << "-" << suffix if suffix
         write_file(ver)
+        sub(Git).commit(FILENAME, "bump up version")
         ver
       end
       private :bump_on
