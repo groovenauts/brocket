@@ -5,7 +5,7 @@ require 'magellan/build/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "magellan-build"
-  spec.version       = Magellan::Build::VERSION
+  spec.version       = BRocket::VERSION
   spec.authors       = ["akima"]
   spec.email         = ["t-akima@groovenauts.jp"]
   spec.summary       = %q{supports to build Docker Container with VERSION}
