@@ -59,8 +59,12 @@ module BRocket
         end
       end
 
+      def version_tag=(val)
+        @version_tag = val
+      end
+
       def version_tag
-        VersionFile.current
+        @version_tag ||= VersionFile.current
       end
 
     end
