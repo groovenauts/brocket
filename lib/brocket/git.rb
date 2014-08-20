@@ -1,6 +1,6 @@
 require "brocket"
 
-module Magellan
+module BRocket
   module Build
     class Git < Base
 

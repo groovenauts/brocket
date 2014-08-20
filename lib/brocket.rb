@@ -1,6 +1,6 @@
 require "brocket/version"
 
-module Magellan
+module BRocket
   module Build
     autoload :Cli        ,    "brocket/cli"
     autoload :Base       ,    "brocket/base"

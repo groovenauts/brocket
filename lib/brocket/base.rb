@@ -2,7 +2,7 @@ require "brocket"
 
 require 'thor'
 
-module Magellan
+module BRocket
   module Build
     class Base < Thor
       class_option :verbose, :type => :boolean

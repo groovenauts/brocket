@@ -3,7 +3,7 @@ require "brocket"
 require 'yaml'
 require 'thor'
 
-module Magellan
+module BRocket
   module Build
     class Docker < Base
       CONFIG_LINE_SEP = "[config]".freeze
