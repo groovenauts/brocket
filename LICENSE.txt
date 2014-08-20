@@ -1,4 +1,4 @@
-Copyright (c) 2014 akima
+Copyright (c) 2014 Groovenauts, Inc.
 
 MIT License
 
