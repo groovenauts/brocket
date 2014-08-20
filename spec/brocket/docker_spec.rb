@@ -10,7 +10,7 @@ describe BRocket::Docker do
     let(:version){ "2.3.4" }
 
     before do
-      allow(subject).to receive(:read_file).with(any_args).and_return(File.read(filepath))
+      allow(subject).to receive(:read_config_file).with(any_args).and_return(File.read(filepath))
       allow_any_instance_of(BRocket::VersionFile).to receive(:current).and_return(version)
     end
 
@@ -33,7 +33,7 @@ describe BRocket::Docker do
     let(:version){ "2.3.4" }
 
     before do
-      allow(subject).to receive(:read_file).with(any_args).and_return(File.read(filepath))
+      allow(subject).to receive(:read_config_file).with(any_args).and_return(File.read(filepath))
       allow_any_instance_of(BRocket::VersionFile).to receive(:current).and_return(version)
     end
 

@@ -51,13 +51,13 @@ module BRocket
       end
 
       def config_hash
-        content = read_file
+        content = read_config_file
         lines = content.lines.select{|line| line =~ CONFIG_LINE_HEADER}.
           map{|line| line.sub(CONFIG_LINE_HEADER, "")}
         return (YAML.load(lines.join("\n")) || {})
       end
 
-      def read_file
+      def read_config_file
         File.read("Dockerfile")
       end
 
