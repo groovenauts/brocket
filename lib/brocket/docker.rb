@@ -1,4 +1,4 @@
-require "magellan/build"
+require "brocket"
 
 require 'yaml'
 require 'thor'

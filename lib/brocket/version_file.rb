@@ -1,4 +1,4 @@
-require "magellan/build"
+require "brocket"
 
 module Magellan
   module Build

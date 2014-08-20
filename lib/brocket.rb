@@ -1,12 +1,12 @@
-require "magellan/build/version"
+require "brocket/version"
 
 module Magellan
   module Build
-    autoload :Cli        ,    "magellan/build/cli"
-    autoload :Base       ,    "magellan/build/base"
-    autoload :VersionFile,    "magellan/build/version_file"
-    autoload :Git        ,    "magellan/build/git"
-    autoload :Docker     ,    "magellan/build/docker"
+    autoload :Cli        ,    "brocket/cli"
+    autoload :Base       ,    "brocket/base"
+    autoload :VersionFile,    "brocket/version_file"
+    autoload :Git        ,    "brocket/git"
+    autoload :Docker     ,    "brocket/docker"
 
     class BuildError < StandardError
     end

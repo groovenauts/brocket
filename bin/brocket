@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'magellan/build'
+require 'brocket'
 
 begin
   BRocket::Cli.start(ARGV)

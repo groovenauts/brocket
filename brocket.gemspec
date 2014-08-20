@@ -1,10 +1,10 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'magellan/build/version'
+require 'brocket/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "magellan-build"
+  spec.name          = "brocket"
   spec.version       = BRocket::VERSION
   spec.authors       = ["akima"]
   spec.email         = ["t-akima@groovenauts.jp"]
