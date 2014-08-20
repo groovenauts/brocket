@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe Magellan::Build::VersionFile do
+describe BRocket::VersionFile do
 
-  let(:subject){ Magellan::Build::VersionFile.new }
+  let(:subject){ BRocket::VersionFile.new }
 
   describe :init do
     it :without_arg do

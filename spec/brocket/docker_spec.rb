@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe Magellan::Build::Docker do
+describe BRocket::Docker do
 
-  let(:subject){ Magellan::Build::Docker.new }
+  let(:subject){ BRocket::Docker.new }
 
   describe "Dockerfile-basic" do
     let(:filepath){ File.expand_path("../Dockerfiles/Dockerfile-basic", __FILE__) }
@@ -11,7 +11,7 @@ describe Magellan::Build::Docker do
 
     before do
       allow(subject).to receive(:read_file).with(any_args).and_return(File.read(filepath))
-      allow(Magellan::Build::VersionFile).to receive(:current).and_return(version)
+      allow(BRocket::VersionFile).to receive(:current).and_return(version)
     end
 
     describe :config do
@@ -34,7 +34,7 @@ describe Magellan::Build::Docker do
 
     before do
       allow(subject).to receive(:read_file).with(any_args).and_return(File.read(filepath))
-      allow(Magellan::Build::VersionFile).to receive(:current).and_return(version)
+      allow(BRocket::VersionFile).to receive(:current).and_return(version)
     end
 
     describe :config do

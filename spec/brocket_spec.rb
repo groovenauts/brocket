@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe Magellan::Build do
+describe BRocket do
   it 'has a version number' do
-    expect(Magellan::Build::VERSION).not_to be nil
+    expect(BRocket::VERSION).not_to be nil
   end
 end

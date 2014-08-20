@@ -1,4 +1,4 @@
-# Magellan::Build
+# BRocket
 
 TODO: Write a gem description
 
