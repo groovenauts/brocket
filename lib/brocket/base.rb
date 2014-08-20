@@ -3,7 +3,6 @@ require "brocket"
 require 'thor'
 
 module BRocket
-  module Build
     class Base < Thor
       class_option :verbose, :type => :boolean
       class_option :dryrun , :type => :boolean
@@ -64,5 +63,4 @@ module BRocket
       end
 
     end
-  end
 end

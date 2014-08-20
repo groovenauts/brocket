@@ -1,7 +1,6 @@
 require "brocket"
 
 module BRocket
-  module Build
     class VersionFile < Base
       FILENAME = "VERSION".freeze
       INITIAL_VERSION = "0.0.1".freeze
@@ -66,5 +65,4 @@ module BRocket
       end
 
     end
-  end
 end

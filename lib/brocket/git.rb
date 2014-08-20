@@ -1,7 +1,6 @@
 require "brocket"
 
 module BRocket
-  module Build
     class Git < Base
 
       desc "guard_clean", "Raise error if some difference exists."
@@ -63,5 +62,4 @@ module BRocket
       end
 
     end
-  end
 end

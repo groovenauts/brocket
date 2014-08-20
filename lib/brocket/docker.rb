@@ -4,7 +4,6 @@ require 'yaml'
 require 'thor'
 
 module BRocket
-  module Build
     class Docker < Base
       CONFIG_LINE_SEP = "[config]".freeze
       CONFIG_LINE_HEADER = /\A\#\s*#{Regexp.escape(CONFIG_LINE_SEP)}\s?/.freeze
@@ -74,5 +73,4 @@ module BRocket
       end
 
     end
-  end
 end

@@ -1,7 +1,6 @@
 require "brocket/version"
 
 module BRocket
-  module Build
     autoload :Cli        ,    "brocket/cli"
     autoload :Base       ,    "brocket/base"
     autoload :VersionFile,    "brocket/version_file"
@@ -10,5 +9,4 @@ module BRocket
 
     class BuildError < StandardError
     end
-  end
 end

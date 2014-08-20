@@ -1,7 +1,6 @@
 require "brocket"
 
 module BRocket
-  module Build
     class Cli < Base
 
       desc "init", "initialize current directory"
@@ -45,5 +44,4 @@ module BRocket
       end
 
     end
-  end
 end
