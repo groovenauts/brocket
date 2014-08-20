@@ -3,7 +3,7 @@
 #
 
 FROM groovenauts/ruby:2.1.2
-MAINTAINER magellan@groovenauts.jp
+MAINTAINER tech@groovenauts.jp
 
 ENV RAILS_ENV production
 
