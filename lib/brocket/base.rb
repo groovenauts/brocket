@@ -1,6 +1,9 @@
 require "brocket"
 
+require 'logger'
+
 require 'thor'
+require 'logger_pipe'
 
 module BRocket
   class Base < Thor
@@ -28,39 +31,26 @@ module BRocket
       end
 
       def verbose(msg)
-        $stderr.puts("\e[34m#{msg}\e[0m") if verbose?
+        logger.debug("\e[34m#{msg}\e[0m") if verbose?
       end
 
       def info(msg)
-        $stderr.puts(msg)
+        logger.info(msg)
       end
       def success(msg)
-        $stderr.puts("\e[32m#{msg}\e[0m")
+        logger.info("\e[32m#{msg}\e[0m")
       end
 
       def error(msg)
         raise BuildError, msg
       end
 
-      def sh(cmd, &block)
-        out, code = sh_with_code(cmd, &block)
-        code == 0 ? out : error(out.empty? ? "Running `#{cmd}' failed. Run this command directly for more detailed output." : out)
+      def logger
+        @logger ||= Logger.new($stderr)
       end
 
-      def sh_with_code(cmd, &block)
-        cmd << " 2>&1"
-        verbose(cmd)
-        outbuf = ''
-        if dryrun?
-          block.call(outbuf) if block
-          ["DRYRUN", 0]
-        else
-          outbuf = `#{cmd}`
-          if $? == 0
-            block.call(outbuf) if block
-          end
-          [outbuf, $?]
-        end
+      def sh(cmd, &block)
+        LoggerPipe.run(logger, cmd + " 2>&1", dry_run: dryrun?)
       end
 
     end
