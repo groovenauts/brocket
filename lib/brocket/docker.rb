@@ -43,6 +43,16 @@ module BRocket
       success("[docker push] OK")
     end
 
+    desc "call_before_build", "call BEFORE_BUILD callback manually"
+    def call_before_build
+      execute(config_hash['BEFORE_BUILD'])
+    end
+
+    desc "call_after_build", "call AFTER_BUILD callback manually"
+    def call_after_build
+      execute(config_hash['AFTER_BUILD'])
+    end
+
     no_commands do
       def config_image_name(c)
         img_name = (c['IMAGE_NAME'] || '').strip
