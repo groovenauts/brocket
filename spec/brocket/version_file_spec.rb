@@ -33,19 +33,22 @@ describe BRocket::VersionFile do
   }.each do |method_name, patterns|
 
     describe method_name do
+      let(:git){ double(:git_for_guard_clean, guard_clean: true) }
+      let(:git_for_commit     ){ double(:git_for_commit) }
+      before do
+        allow(BRocket::Git).to receive(:new).and_return(git)
+        allow(git).to receive(:options=).with({})
+        allow(git).to receive(:commit).with("VERSION", instance_of(String))
+      end
       it :without_arg do
-        allow_any_instance_of(BRocket::Git).to receive(:guard_clean)
         allow(subject).to receive(:read_file).and_return("1.2.3")
         expect(subject).to receive(:write_file).with(patterns[:without_arg])
-        allow_any_instance_of(BRocket::Git).to receive(:commit).with("VERSION", instance_of(String))
         subject.send(method_name)
       end
 
       it :with_arg do
-        allow_any_instance_of(BRocket::Git).to receive(:guard_clean)
         allow(subject).to receive(:read_file).and_return("1.2.3")
         expect(subject).to receive(:write_file).with(patterns[:with_arg])
-        allow_any_instance_of(BRocket::Git).to receive(:commit).with("VERSION", instance_of(String))
         subject.send(method_name, "5")
       end
     end

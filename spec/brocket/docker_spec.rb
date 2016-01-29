@@ -4,6 +4,12 @@ describe BRocket::Docker do
 
   let(:subject){ BRocket::Docker.new }
 
+  before do
+    version_file = double(:version_file, current: version)
+    allow(version_file).to receive(:options=).with({})
+    allow(BRocket::VersionFile).to receive(:new).and_return(version_file)
+  end
+
   describe "Dockerfile-basic" do
     let(:filepath){ File.expand_path("../Dockerfiles/Dockerfile-basic", __FILE__) }
     let(:image_name){ "groovenauts/rails-example" }
@@ -11,7 +17,6 @@ describe BRocket::Docker do
 
     before do
       allow(subject).to receive(:read_config_file).with(any_args).and_return(File.read(filepath))
-      allow_any_instance_of(BRocket::VersionFile).to receive(:current).and_return(version)
     end
 
     describe :config do
@@ -34,7 +39,6 @@ describe BRocket::Docker do
 
     before do
       allow(subject).to receive(:read_config_file).with(any_args).and_return(File.read(filepath))
-      allow_any_instance_of(BRocket::VersionFile).to receive(:current).and_return(version)
     end
 
     describe :config do

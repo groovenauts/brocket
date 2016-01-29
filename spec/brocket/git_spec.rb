@@ -11,8 +11,14 @@ describe BRocket::Git do
     let(:version){ "2.3.4" }
 
     before do
-      allow_any_instance_of(BRocket::Docker).to receive(:read_config_file).with(any_args).and_return(File.read(filepath))
-      allow_any_instance_of(BRocket::VersionFile).to receive(:current).and_return(version)
+      docker = BRocket::Docker.new
+      allow(BRocket::Docker).to receive(:new).and_return(docker)
+      allow(docker).to receive(:read_config_file).with(any_args).and_return(File.read(filepath))
+
+      version_file = double(:version_file)
+      allow(BRocket::VersionFile).to receive(:new).and_return(version_file)
+      allow(version_file).to receive(:options=)
+      allow(version_file).to receive(:current).and_return(version)
     end
 
     describe :config do
