@@ -12,11 +12,12 @@ config IMAGE_NAME and hooks like BEFORE_BUILD and AFTER_BUILD.
     3. push by git
     4. push by docker
 - `brocket docker build`
-    1. call BEFORE_BUILD
-    2. `docker build` with arguments
+    1. cd WORKING_DIR
+    2. call BEFORE_BUILD
+    3. `docker build` with arguments
         - call ON_BUILD_COMPLETE on success
         - call ON_BUILD_ERROR on failure
-    3. call AFTER_BUILD
+    4. call AFTER_BUILD
 
 ## Installation
 
@@ -54,6 +55,7 @@ add following line to your Dockerfile.
 
 example https://github.com/tengine/brocket/blob/master/spec/brocket/Dockerfiles/Dockerfile-basic#L2
 
+
 ### bump up VERSION
 
 When you increment VERSION file, you can use theese commands.
@@ -71,13 +73,14 @@ You can define commands to execute around `docker build` like this:
 ```
 # [config] IMAGE_NAME: "groovenauts/rails-example"
 # [config]
+# [config] WORKING_DIR: ".."
+# [config]
 # [config] BEFORE_BUILD:
-# [config]   - abc
-# [config]   - def ghi
+# [config]   - rm log/*.log
+# [config]   - cp some/files dest
 # [config]
 # [config] AFTER_BUILD:
-# [config]   - "jkl"
-# [config]   - mno
+# [config]   - rm -rf tmp/build
 # [config]
 # [config] ON_BUILD_COMPLETE: foo bar
 # [config]
