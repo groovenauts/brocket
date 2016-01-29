@@ -21,17 +21,17 @@ module BRocket
       c = config_hash
       img_name = config_image_name(c)
       Dir.chdir(working_dir) do
-      begin
-        execute(c['BEFORE_BUILD'])
-        version = sub(VersionFile).current
-        execute("docker build -t #{img_name}:#{version} .")
-        execute(c['ON_BUILD_COMPLETE'])
-      rescue
-        execute(c['ON_BUILD_ERROR'])
-        raise
-      ensure
-        execute(c['AFTER_BUILD'])
-      end
+        begin
+          execute(c['BEFORE_BUILD'])
+          version = sub(VersionFile).current
+          execute("docker build -t #{img_name}:#{version} .")
+          execute(c['ON_BUILD_COMPLETE'])
+        rescue
+          execute(c['ON_BUILD_ERROR'])
+          raise
+        ensure
+          execute(c['AFTER_BUILD'])
+        end
       end
       success("[docker build] OK")
     end
