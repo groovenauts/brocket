@@ -44,6 +44,7 @@ describe BRocket::Docker do
     describe :config do
       it do
         expected = {
+          "WORKING_DIR" => "..",
           "IMAGE_NAME" => image_name,
           "BEFORE_BUILD" => ["abc", "def ghi"],
           "AFTER_BUILD" => ["jkl", "mno"],
