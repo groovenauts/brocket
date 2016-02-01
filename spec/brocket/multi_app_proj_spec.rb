@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe :multi_app_proj do
-  context :app1 do
+  context "app1 with absolute path" do
     let(:dockerfile){ File.expand_path("../multi_app_proj/app1/docker/Dockerfile", __FILE__) }
     let(:version_filepath){ File.expand_path("../multi_app_proj/app1/docker/VERSION.txt", __FILE__) }
     
@@ -24,7 +24,7 @@ describe :multi_app_proj do
     end
   end
 
-  context :app2 do
+  context "app2 with absolute path" do
     let(:dockerfile){ File.expand_path("../multi_app_proj/app2/Dockerfile", __FILE__) }
     let(:version_filepath){ File.expand_path("../multi_app_proj/app2/VERSION", __FILE__) }
     
