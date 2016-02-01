@@ -1,7 +1,7 @@
 require "brocket"
 
 module BRocket
-  class Git < Base
+  class Git < Configurable
 
     desc "guard_clean", "Raise error if some difference exists."
     def guard_clean
