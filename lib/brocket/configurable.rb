@@ -12,8 +12,8 @@ module BRocket
     class_option :dockerfile, aliases: '-f', type: :string, default: "Dockerfile", desc: "Dockerfile to build"
 
     no_commands do
-      def config_image_name(c)
-        img_name = (c['IMAGE_NAME'] || '').strip
+      def config_image_name
+        img_name = (config_hash['IMAGE_NAME'] || '').strip
         error "No IMAGE_NAME found in Dockerfile. Please add `# #{CONFIG_LINE_SEP} IMAGE_NAME: [IMAGE NAME on DockerHub]` in Dockerfile" if img_name.empty?
         img_name
       end
