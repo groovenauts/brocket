@@ -80,6 +80,9 @@ describe :multi_app_proj do
         obj.options = {dockerfile: docker_relpath}
         obj
       end
+      it{ expect(docker_obj.working_dir).to eq base_dir }
+      it{ expect(docker_obj.config_filepath).to eq File.expand_path(docker_relpath, base_dir) }
+      it{ expect(docker_obj.config_relpath ).to eq docker_relpath }
       it do
         expect(docker_obj).to receive(:sh).with("docker build -t old_app1:1.2.1 -f docker/Dockerfile .")
         docker_obj.build
@@ -133,6 +136,9 @@ describe :multi_app_proj do
         # obj.options = {dockerfile: docker_relpath}
         obj
       end
+      it{ expect(docker_obj.working_dir).to eq File.expand_path("..", base_dir) }
+      it{ expect(docker_obj.config_filepath).to eq File.expand_path("Dockerfile", base_dir) }
+      it{ expect(docker_obj.config_relpath ).to eq "app2/Dockerfile" }
       it do
         expect(docker_obj).to receive(:sh).with("docker build -t new_app2:0.1.0 -f app2/Dockerfile .")
         docker_obj.build
