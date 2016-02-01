@@ -2,6 +2,7 @@
 # [config] IMAGE_NAME: "new_app2"
 # [config]
 # [config] WORKING_DIR: ".."
+# [config] GIT_TAG_PREFIX: "app2/"
 #
 
 FROM groovenauts/ruby:2.1.2

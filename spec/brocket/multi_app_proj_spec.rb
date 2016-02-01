@@ -13,6 +13,15 @@ describe :multi_app_proj do
       end
       it{ expect(version_obj.current).to eq "1.2.1" }
     end
+
+    describe BRocket::Git do
+      let(:git_obj) do
+        obj = BRocket::Git.new
+        obj.options = {dockerfile: dockerfile}
+        obj
+      end
+      it{ expect(git_obj.version_tag).to eq "1.2.1" }
+    end
   end
 
   context :app2 do
@@ -26,6 +35,15 @@ describe :multi_app_proj do
         obj
       end
       it{ expect(version_obj.current).to eq "0.1.0" }
+    end
+
+    describe BRocket::Git do
+      let(:git_obj) do
+        obj = BRocket::Git.new
+        obj.options = {dockerfile: dockerfile}
+        obj
+      end
+      it{ expect(git_obj.version_tag).to eq "app2/0.1.0" }
     end
   end
 end

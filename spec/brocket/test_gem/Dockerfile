@@ -2,6 +2,7 @@
 # [config] IMAGE_NAME: "test_gem"
 # [config]
 # [config] VERSION_SCRIPT: "ruby -r ./lib/test_gem/version.rb -e 'puts TestGem::VERSION'"
+# [config] GIT_TAG_PREFIX: "test_gem/"
 #
 
 FROM ruby:2.3.0
