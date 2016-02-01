@@ -2,7 +2,7 @@
 # [config] IMAGE_NAME: "groovenauts/rails-example"
 # [config]
 # [config] # 作業ディレクトリ
-# [config] WORKING_DIR: ".."
+# [config] WORKING_DIR: "."
 # [config]
 # [config] # ビルド前
 # [config] BEFORE_BUILD:

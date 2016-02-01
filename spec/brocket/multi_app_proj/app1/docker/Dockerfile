@@ -1,7 +1,7 @@
 #
 # [config] IMAGE_NAME: "old_app1"
 # [config]
-# [config] WORKING_DIR: "."
+# [config] WORKING_DIR: ".."
 # [config] VERSION_FILE: "VERSION.txt"
 #
 
