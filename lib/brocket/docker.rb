@@ -7,13 +7,11 @@ module BRocket
   class Docker < Configurable
 
     desc "config", "show configurations in Dockerfile"
-    option :dockerfile, aliases: '-f', type: :string, default: "Dockerfile", desc: "Dockerfile to build"
     def config
       $stdout.puts(YAML.dump(config_hash))
     end
 
     desc "build", "build docker image"
-    option :dockerfile, aliases: '-f', type: :string, default: "Dockerfile", desc: "Dockerfile to build"
     def build
       info("[docker build] starting")
       c = config_hash

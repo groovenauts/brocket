@@ -8,6 +8,8 @@ module BRocket
     CONFIG_LINE_SEP = "[config]".freeze
     CONFIG_LINE_HEADER = /\A\#\s*#{Regexp.escape(CONFIG_LINE_SEP)}\s?/.freeze
 
+    class_option :dockerfile, aliases: '-f', type: :string, default: "Dockerfile", desc: "Dockerfile to build"
+
     no_commands do
       def config_image_name(c)
         img_name = (c['IMAGE_NAME'] || '').strip
