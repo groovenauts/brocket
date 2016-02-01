@@ -37,7 +37,7 @@ describe BRocket::VersionFile do
       let(:git_for_commit     ){ double(:git_for_commit) }
       before do
         allow(BRocket::Git).to receive(:new).and_return(git)
-        allow(git).to receive(:options=).with({})
+        allow(git).to receive(:options=).with("dockerfile"=>"Dockerfile")
         allow(git).to receive(:commit).with("VERSION", instance_of(String))
       end
       it :without_arg do

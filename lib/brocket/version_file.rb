@@ -1,7 +1,7 @@
 require "brocket"
 
 module BRocket
-  class VersionFile < Base
+  class VersionFile < Configurable
     FILENAME = "VERSION".freeze
     INITIAL_VERSION = "0.0.1".freeze
 
