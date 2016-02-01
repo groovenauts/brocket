@@ -1,7 +1,5 @@
 require "brocket"
 
-require 'logger'
-
 require 'thor'
 require 'logger_pipe'
 
@@ -46,7 +44,7 @@ module BRocket
       end
 
       def logger
-        @logger ||= Logger.new($stderr)
+        BRocket.logger
       end
 
       def sh(cmd, &block)

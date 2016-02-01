@@ -7,7 +7,7 @@ describe BRocket::Docker do
   let(:image_name){ "groovenauts/rails-example" }
   let(:version){ "2.3.4" }
 
-  let(:expected_options){ {} }
+  let(:expected_options){ {"dockerfile"=>"Dockerfile"} }
   before do
     version_file = double(:version_file, current: version)
     allow(version_file).to receive(:options=).with(expected_options)
@@ -16,6 +16,7 @@ describe BRocket::Docker do
 
   describe "Dockerfile-basic" do
     let(:filepath){ File.expand_path("../Dockerfiles/Dockerfile-basic", __FILE__) }
+    before{ allow(BRocket).to receive(:user_pwd).and_return(File.dirname(filepath)) }
 
     before do
       allow(subject).to receive(:read_config_file).with(any_args).and_return(File.read(filepath))
@@ -36,6 +37,7 @@ describe BRocket::Docker do
   describe "Dockerfile-working_dir" do
     let(:filepath){ File.expand_path("../Dockerfiles/Dockerfile-working_dir", __FILE__) }
     let(:expected_options){ {dockerfile: filepath} }
+    before{ allow(BRocket).to receive(:user_pwd).and_return(File.dirname(filepath)) }
 
     before do
       allow(subject).to receive(:read_config_file).with(any_args).and_return(File.read(filepath))
@@ -49,7 +51,7 @@ describe BRocket::Docker do
       it do
         dir = File.expand_path("../..", filepath)
         expect(Dir).to receive(:chdir).with(dir).and_yield
-        expect(subject).to receive(:sh).with("docker build -t #{image_name}:#{version} .")
+        expect(subject).to receive(:sh).with("docker build -t #{image_name}:#{version} -f Dockerfiles/Dockerfile-working_dir .")
         subject.options = {dockerfile: filepath}
         subject.build
       end
@@ -59,6 +61,7 @@ describe BRocket::Docker do
 
   describe "Dockerfile-basic" do
     let(:filepath){ File.expand_path("../Dockerfiles/Dockerfile-hook", __FILE__) }
+    before{ allow(BRocket).to receive(:user_pwd).and_return(File.dirname(filepath)) }
 
     before do
       allow(subject).to receive(:read_config_file).with(any_args).and_return(File.read(filepath))
@@ -67,7 +70,7 @@ describe BRocket::Docker do
     describe :config do
       it do
         expected = {
-          "WORKING_DIR" => "..",
+          "WORKING_DIR" => ".",
           "IMAGE_NAME" => image_name,
           "BEFORE_BUILD" => ["abc", "def ghi"],
           "AFTER_BUILD" => ["jkl", "mno"],

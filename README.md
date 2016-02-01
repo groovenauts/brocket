@@ -88,9 +88,27 @@ You can define commands to execute around `docker build` like this:
 # [config]
 ```
 
-
 https://github.com/tengine/brocket/blob/master/spec/brocket/Dockerfiles/Dockerfile-hook
 
+### Other configurations
+
+#### WORKING_DIR
+
+The directory which the build command and hooks are executed in.
+
+#### VERSION_FILE
+
+A text file to define the container version. It must be a relative path from Dockerfile.
+
+#### VERSION_SCRIPT
+
+A script to get the container version. It runs in the directory of Dockerfile.
+
+`ruby -r ./lib/test_gem/version.rb -e 'puts TestGem::VERSION'`
+
+#### GIT_TAG_PREFIX
+
+The prefix for the version tags on git.
 
 ### For more information
 

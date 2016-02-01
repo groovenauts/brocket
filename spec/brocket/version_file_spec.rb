@@ -3,6 +3,9 @@ require 'spec_helper'
 describe BRocket::VersionFile do
 
   let(:subject){ BRocket::VersionFile.new }
+  let(:dockerfile){ File.expand_path("../Dockerfiles/Dockerfile-basic", __FILE__) }
+  let(:version_file){ File.expand_path("../Dockerfiles/VERSION", __FILE__) }
+  before{ subject.options = { dockerfile: dockerfile } }
 
   describe :init do
     it :without_arg do
@@ -37,8 +40,8 @@ describe BRocket::VersionFile do
       let(:git_for_commit     ){ double(:git_for_commit) }
       before do
         allow(BRocket::Git).to receive(:new).and_return(git)
-        allow(git).to receive(:options=).with({})
-        allow(git).to receive(:commit).with("VERSION", instance_of(String))
+        allow(git).to receive(:options=).with(dockerfile: dockerfile)
+        allow(git).to receive(:commit).with(version_file, instance_of(String))
       end
       it :without_arg do
         allow(subject).to receive(:read_file).and_return("1.2.3")

@@ -1,7 +1,7 @@
 require "brocket"
 
 module BRocket
-  class Cli < Base
+  class Cli < Configurable
 
     desc "init", "initialize current directory"
     def init
