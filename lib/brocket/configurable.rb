@@ -34,7 +34,7 @@ module BRocket
       end
 
       def config_filepath
-        options[:dockerfile] || './Dockerfile'
+        @config_filepath ||= File.expand_path(options[:dockerfile] || './Dockerfile', BRocket.user_pwd)
       end
 
       def read_config_file

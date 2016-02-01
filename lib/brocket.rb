@@ -13,11 +13,19 @@ module BRocket
   class BuildError < StandardError
   end
 
+  USER_PWD = Dir.pwd
+
   class << self
     attr_writer :logger
+    attr_writer :user_pwd
 
     def logger
       @logger ||= Logger.new($stderr)
     end
+
+    def user_pwd
+      @user_pwd ||= USER_PWD
+    end
   end
+
 end
