@@ -15,19 +15,10 @@ module BRocket
     def build
       info("[docker build] starting")
       c = config_hash
-      img_name = config_image_name(c)
       Dir.chdir(working_dir) do
         begin
           execute(c['BEFORE_BUILD'])
-          version = sub(VersionFile).current
-          cmd = "docker build -t #{img_name}:#{version}"
-          if options[:dockerfile]
-            fp = config_relpath
-            unless fp == "Dockerfile"
-              cmd << ' -f ' << config_relpath
-            end
-          end
-          cmd << ' .'
+          cmd = build_build_command
           execute(cmd)
           execute(c['ON_BUILD_COMPLETE'])
         rescue
@@ -62,6 +53,20 @@ module BRocket
     end
 
     no_commands do
+      def build_build_command
+        img_name = config_image_name
+        version = sub(VersionFile).current
+        cmd = "docker build -t #{img_name}:#{version}"
+        if options[:dockerfile]
+          fp = config_relpath
+          unless fp == "Dockerfile"
+            cmd << ' -f ' << config_relpath
+          end
+        end
+        cmd << ' .'
+        return cmd
+      end
+
       def execute(commands)
         return unless commands
         commands = commands.is_a?(Array) ? commands : [commands]
