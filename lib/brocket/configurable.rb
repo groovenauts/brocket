@@ -2,6 +2,7 @@ require "brocket"
 
 require 'yaml'
 require 'thor'
+require 'pathname'
 
 module BRocket
   class Configurable < Base
@@ -18,8 +19,8 @@ module BRocket
       end
 
       def working_dir
-        dir = config_hash['WORKING_DIR']
-        dir ? File.expand_path(dir, File.dirname(config_filepath)) : '.'
+        dir = config_hash['WORKING_DIR'] || '.'
+        File.expand_path(dir, File.dirname(config_filepath))
       end
 
       def config_hash
@@ -35,6 +36,12 @@ module BRocket
 
       def config_filepath
         @config_filepath ||= File.expand_path(options[:dockerfile] || './Dockerfile', BRocket.user_pwd)
+      end
+
+      def config_relpath
+        config_p = Pathname.new(config_filepath)
+        base_p   = Pathname.new(working_dir)
+        config_p.relative_path_from(base_p).to_s
       end
 
       def read_config_file

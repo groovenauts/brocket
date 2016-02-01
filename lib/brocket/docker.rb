@@ -20,7 +20,15 @@ module BRocket
         begin
           execute(c['BEFORE_BUILD'])
           version = sub(VersionFile).current
-          execute("docker build -t #{img_name}:#{version} .")
+          cmd = "docker build -t #{img_name}:#{version}"
+          if options[:dockerfile]
+            fp = config_relpath
+            unless fp == "Dockerfile"
+              cmd << ' -f ' << config_relpath
+            end
+          end
+          cmd << ' .'
+          execute(cmd)
           execute(c['ON_BUILD_COMPLETE'])
         rescue
           execute(c['ON_BUILD_ERROR'])
