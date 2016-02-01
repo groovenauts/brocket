@@ -32,7 +32,7 @@ module BRocket
 
     no_commands do
       def filepath
-        FILENAME
+        File.expand_path(config_hash['VERSION_FILE'] || 'VERSION', File.dirname(config_filepath))
       end
 
       def read_file
