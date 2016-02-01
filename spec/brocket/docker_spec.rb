@@ -7,7 +7,7 @@ describe BRocket::Docker do
   let(:image_name){ "groovenauts/rails-example" }
   let(:version){ "2.3.4" }
 
-  let(:expected_options){ {} }
+  let(:expected_options){ {"dockerfile"=>"Dockerfile"} }
   before do
     version_file = double(:version_file, current: version)
     allow(version_file).to receive(:options=).with(expected_options)
