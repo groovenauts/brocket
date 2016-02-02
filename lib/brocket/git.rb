@@ -51,16 +51,12 @@ module BRocket
 
       def git_push
         perform_git_push
-        perform_git_push ' --tags'
+        perform_git_push '--tags'
         $stdout.puts "Pushed git commits and tags."
       end
 
-      def perform_git_push(options = '')
-        begin
-          sh("git push #{options}")
-        rescue LoggerPipe::Failure
-          error "Couldn't git push. `#{cmd}`"
-        end
+      def perform_git_push(options = nil)
+        sh(['git push', options].compact.join(' ' ))
       end
 
       def already_tagged?
