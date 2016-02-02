@@ -149,6 +149,23 @@ describe BRocket::Docker do
         }.to raise_error(error_msg)
       end
     end
+
+    describe :call_before_build do
+      it do
+        expect(Dir).to receive(:chdir).with(subject.working_dir).and_yield
+        expect(subject).to receive(:sh).with("abc")
+        expect(subject).to receive(:sh).with("def ghi")
+        subject.call_before_build
+      end
+    end
+    describe :call_after_build do
+      it do
+        expect(Dir).to receive(:chdir).with(subject.working_dir).and_yield
+        expect(subject).to receive(:sh).with("jkl")
+        expect(subject).to receive(:sh).with("mno")
+        subject.call_after_build
+      end
+    end
   end
 
 end

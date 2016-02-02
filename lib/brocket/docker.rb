@@ -41,12 +41,16 @@ module BRocket
 
     desc "call_before_build", "call BEFORE_BUILD callback manually"
     def call_before_build
-      execute(config_hash['BEFORE_BUILD'])
+      Dir.chdir(working_dir) do
+        execute(config_hash['BEFORE_BUILD'])
+      end
     end
 
     desc "call_after_build", "call AFTER_BUILD callback manually"
     def call_after_build
-      execute(config_hash['AFTER_BUILD'])
+      Dir.chdir(working_dir) do
+        execute(config_hash['AFTER_BUILD'])
+      end
     end
 
     no_commands do
