@@ -20,11 +20,6 @@ module BRocket
     end
 
     no_commands do
-
-      def commit(filepath, msg)
-        sh("git add #{filepath} && git commit -m \"#{msg}\"")
-      end
-
       def clean?
         sh("git diff --exit-code")
         return true
