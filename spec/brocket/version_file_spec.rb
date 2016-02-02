@@ -64,7 +64,7 @@ describe BRocket::VersionFile do
       before do
         allow(BRocket::Git).to receive(:new).and_return(git)
         allow(git).to receive(:options=).with(dockerfile: dockerfile)
-        allow(git).to receive(:commit).with(version_file, instance_of(String))
+        allow(git).to receive(:add_and_commit).with(version_file, instance_of(String))
       end
       it :without_arg do
         allow(subject).to receive(:read_file).and_return("1.2.3")

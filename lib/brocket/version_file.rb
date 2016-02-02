@@ -70,7 +70,7 @@ module BRocket
         ver = parts.join(".")
         ver << "-" << suffix if suffix
         write_file(ver)
-        sub(Git).commit(filepath, "bump up #{pos.to_s} version: #{ver}")
+        sub(Git).add_and_commit(filepath, "bump up #{pos.to_s} version: #{ver}")
         success("[git #{pos.to_s}] #{ver}")
         ver
       end
