@@ -7,10 +7,10 @@ config IMAGE_NAME and hooks like BEFORE_BUILD and AFTER_BUILD.
 ## Behavior
 
 - `brocket release`
-    1. check the local repository si clean and commited
+    1. check the local repository is clean and commited
     2. same as `brocket docker build`
-    3. push by git
-    4. push by docker
+    3. same as `brocket git push`
+    4. docker push
 - `brocket docker build`
     1. cd WORKING_DIR
     2. call BEFORE_BUILD
@@ -18,6 +18,10 @@ config IMAGE_NAME and hooks like BEFORE_BUILD and AFTER_BUILD.
         - call ON_BUILD_COMPLETE on success
         - call ON_BUILD_ERROR on failure
     4. call AFTER_BUILD
+- `brocket git push`
+    1. git tag
+    2. git push
+        - git tag -d if error
 
 ## Installation
 
@@ -121,6 +125,10 @@ Set the registry host name to push not to hub.docker.com .
 #### DOCKER_PUSH_USERNAME
 
 Set the user name on the registry host to push.
+
+#### DOCKER_PUSH_EXTRA_TAG
+
+Set the another tag to push. e.g. "latest"
 
 
 ### For more information

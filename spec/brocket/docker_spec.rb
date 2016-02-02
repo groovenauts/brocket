@@ -67,6 +67,28 @@ describe BRocket::Docker do
     end
   end
 
+  describe "Dockerfile-push-extra-tag" do
+    let(:original_image_name){ "rails-example" }
+    let(:gcr_image_name){ "asia.gcr.io/groovenauts/rails-example" }
+    let(:filepath){ File.expand_path("../Dockerfiles/Dockerfile-push-extra-tag", __FILE__) }
+    before{ allow(BRocket).to receive(:user_pwd).and_return(File.dirname(filepath)) }
+    before{ subject.options = {dockerfile: filepath} }
+    let(:expected_options){ {dockerfile: filepath} }
+
+    describe :push do
+      it do
+        expected_cmd = [
+          "docker tag -f #{original_image_name}:#{version} #{gcr_image_name}:#{version}",
+          "docker tag -f #{original_image_name}:#{version} #{gcr_image_name}:latest",
+          "gcloud docker push #{gcr_image_name}:#{version}",
+          "gcloud docker push #{gcr_image_name}:latest",
+        ].join(' && ')
+        expect(subject).to receive(:sh).with(expected_cmd)
+        subject.push
+      end
+    end
+  end
+
   describe "Dockerfile-working_dir" do
     let(:filepath){ File.expand_path("../Dockerfiles/Dockerfile-working_dir", __FILE__) }
     let(:expected_options){ {dockerfile: filepath} }
