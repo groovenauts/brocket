@@ -65,14 +65,18 @@ module BRocket
       end
 
       def build_push_command
-        img_name = [
-          config_hash['DOCKER_PUSH_REGISTRY'],
-          config_hash['DOCKER_PUSH_USERNAME'],
-          config_image_name
-        ].compact.join('/')
+        registry = config_hash['DOCKER_PUSH_REGISTRY']
+        username = config_hash['DOCKER_PUSH_USERNAME']
+        img_name = [registry, username, config_image_name].compact.join('/')
         version = sub(VersionFile).current
         build_cmd = config_hash['DOCKER_PUSH_COMMAND'] || 'docker push'
-        return "#{build_cmd} #{img_name}:#{version}"
+        cmd = [
+          (registry || username) ?
+            "docker tag -f #{config_image_name}:#{version} #{img_name}:#{version}" :
+            nil,
+          "#{build_cmd} #{img_name}:#{version}",
+        ].compact.join(' && ')
+        return cmd
       end
 
       def execute(commands)
