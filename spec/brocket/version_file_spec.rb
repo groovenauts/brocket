@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'spec_helper'
 
 describe BRocket::VersionFile do
@@ -59,12 +60,11 @@ describe BRocket::VersionFile do
   }.each do |method_name, patterns|
 
     describe method_name do
-      let(:git){ double(:git_for_guard_clean, guard_clean: true) }
-      let(:git_for_commit     ){ double(:git_for_commit) }
+      let(:git){ subject.sub(BRocket::Git) }
       before do
         allow(BRocket::Git).to receive(:new).and_return(git)
-        allow(git).to receive(:options=).with(dockerfile: dockerfile)
-        allow(git).to receive(:add_and_commit).with(version_file, instance_of(String))
+        allow(git).to receive(:guard_clean)
+        expect(git).to receive(:sh).with(/git add #{version_file} && git commit -m \".+\"/)
       end
       it :without_arg do
         allow(subject).to receive(:read_file).and_return("1.2.3")
