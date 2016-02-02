@@ -110,6 +110,19 @@ A script to get the container version. It runs in the directory of Dockerfile.
 
 The prefix for the version tags on git.
 
+#### DOCKER_PUSH_COMMAND
+
+Set `gcloud docker push` to push to [Google Cloud Registry](https://cloud.google.com/container-registry/docs/).
+
+#### DOCKER_PUSH_REGISTRY
+
+Set the registry host name to push not to hub.docker.com .
+
+#### DOCKER_PUSH_USERNAME
+
+Set the user name on the registry host to push.
+
+
 ### For more information
 
 ```
