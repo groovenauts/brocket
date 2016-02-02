@@ -32,8 +32,33 @@ describe BRocket::Docker do
         subject.build
       end
     end
+
+    describe :push do
+      it do
+        expect(subject).to receive(:sh).with("docker push #{image_name}:#{version}")
+        subject.push
+      end
+    end
   end
 
+
+  describe "Dockerfile-gcr" do
+    let(:gcr_image_name){ "asia.gcr.io/groovenauts/rails-example" }
+    let(:filepath){ File.expand_path("../Dockerfiles/Dockerfile-gcr", __FILE__) }
+    before{ allow(BRocket).to receive(:user_pwd).and_return(File.dirname(filepath)) }
+
+    before do
+      allow(subject).to receive(:read_config_file).with(any_args).and_return(File.read(filepath))
+    end
+
+    describe :push do
+      it do
+        expect(subject).to receive(:sh).with("gcloud docker push #{gcr_image_name}:#{version}")
+        subject.push
+      end
+    end
+  end
+  
   describe "Dockerfile-working_dir" do
     let(:filepath){ File.expand_path("../Dockerfiles/Dockerfile-working_dir", __FILE__) }
     let(:expected_options){ {dockerfile: filepath} }
@@ -59,7 +84,7 @@ describe BRocket::Docker do
   end
 
 
-  describe "Dockerfile-basic" do
+  describe "Dockerfile-hook" do
     let(:filepath){ File.expand_path("../Dockerfiles/Dockerfile-hook", __FILE__) }
     before{ allow(BRocket).to receive(:user_pwd).and_return(File.dirname(filepath)) }
 
