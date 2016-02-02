@@ -38,7 +38,6 @@ module BRocket
       def read_file
         vs = config_hash['VERSION_SCRIPT']
         if vs
-          puts "cd #{working_dir}"
           Dir.chdir(File.dirname(config_filepath)) do
             res = `#{vs}`.strip
             return $? == 0 ? res : raise("Error on VERSION_SCRIPT: #{vs}")
