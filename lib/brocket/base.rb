@@ -48,7 +48,7 @@ module BRocket
       end
 
       def sh(cmd, &block)
-        LoggerPipe.run(logger, cmd + " 2>&1", dry_run: dryrun?)
+        LoggerPipe.run(logger, cmd, dry_run: dryrun?)
       end
 
     end
