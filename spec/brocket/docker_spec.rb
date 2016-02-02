@@ -24,6 +24,10 @@ describe BRocket::Docker do
 
     describe :config do
       it{ expect(subject.config_hash).to eq({"IMAGE_NAME" => image_name}) }
+      it do
+        expect($stdout).to receive(:puts).with(YAML.dump(subject.config_hash))
+        subject.config
+      end
     end
 
     describe :build do
@@ -62,7 +66,7 @@ describe BRocket::Docker do
       end
     end
   end
-  
+
   describe "Dockerfile-working_dir" do
     let(:filepath){ File.expand_path("../Dockerfiles/Dockerfile-working_dir", __FILE__) }
     let(:expected_options){ {dockerfile: filepath} }
@@ -87,6 +91,17 @@ describe BRocket::Docker do
     end
   end
 
+
+  describe "Dockerfile not found" do
+    let(:filepath){ File.expand_path("../Dockerfiles/Dockerfile-noexist", __FILE__) }
+    before{ allow(BRocket).to receive(:user_pwd).and_return(File.dirname(filepath)) }
+
+    describe :config do
+      it do
+        expect{ subject.config }.to raise_error(/file not found/i)
+      end
+    end
+  end
 
   describe "Dockerfile-hook" do
     let(:filepath){ File.expand_path("../Dockerfiles/Dockerfile-hook", __FILE__) }
@@ -132,6 +147,23 @@ describe BRocket::Docker do
         expect{
           subject.build
         }.to raise_error(error_msg)
+      end
+    end
+
+    describe :call_before_build do
+      it do
+        expect(Dir).to receive(:chdir).with(subject.working_dir).and_yield
+        expect(subject).to receive(:sh).with("abc")
+        expect(subject).to receive(:sh).with("def ghi")
+        subject.call_before_build
+      end
+    end
+    describe :call_after_build do
+      it do
+        expect(Dir).to receive(:chdir).with(subject.working_dir).and_yield
+        expect(subject).to receive(:sh).with("jkl")
+        expect(subject).to receive(:sh).with("mno")
+        subject.call_after_build
       end
     end
   end

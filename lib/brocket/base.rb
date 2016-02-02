@@ -16,16 +16,12 @@ module BRocket
         task
       end
 
-      def opts
-        @opts ||= options || {}
-      end
-
       def dryrun?
-        opts[:dryrun]
+        options[:dryrun]
       end
 
       def verbose?
-        opts[:verbose]
+        options[:verbose]
       end
 
       def verbose(msg)
@@ -47,8 +43,8 @@ module BRocket
         BRocket.logger
       end
 
-      def sh(cmd, &block)
-        LoggerPipe.run(logger, cmd + " 2>&1", dry_run: dryrun?)
+      def sh(cmd)
+        LoggerPipe.run(logger, cmd, dry_run: dryrun?)
       end
 
     end

@@ -46,7 +46,7 @@ module BRocket
 
       def read_config_file
         unless File.readable?(config_filepath)
-          raise "File not found: #{config_filepath}"
+          error "File not found: #{config_filepath}"
         end
         File.read(config_filepath)
       end

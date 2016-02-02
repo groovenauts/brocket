@@ -38,16 +38,15 @@ module BRocket
       def read_file
         vs = config_hash['VERSION_SCRIPT']
         if vs
-          puts "cd #{working_dir}"
           Dir.chdir(File.dirname(config_filepath)) do
             res = `#{vs}`.strip
-            return $? == 0 ? res : raise("Error on VERSION_SCRIPT: #{vs}")
+            return $? == 0 ? res : error("Error on VERSION_SCRIPT: #{vs}")
           end
         else
           if File.readable?(filepath)
             File.read(filepath).strip
           else
-            raise BuildError, "File not found #{filepath}. You can run `#{$0} init`"
+            error "File not found #{filepath}. You can run `#{$0} init`"
           end
         end
       end

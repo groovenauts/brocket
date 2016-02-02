@@ -19,6 +19,29 @@ describe BRocket::VersionFile do
     end
   end
 
+  describe :show do
+    it do
+      expect($stdout).to receive(:puts).with(File.read(version_file).strip)
+      subject.show
+    end
+
+    context :invalid do
+      let(:dockerfile){ File.expand_path("../Dockerfiles/Dockerfile-invalid-version", __FILE__) }
+      it do
+        expect{ subject.show }.to raise_error(BRocket::BuildError, /file not found/i)
+      end
+    end
+  end
+
+  describe :write_file do
+    it do
+      ver = "1.2.3"
+      f = double(:mock_file)
+      expect(File).to receive(:open).with(version_file, "w").and_yield(f)
+      expect(f).to receive(:puts).with(ver)
+      subject.send(:write_file, ver)
+    end
+  end
 
   {
     major: {
