@@ -1,12 +1,15 @@
 require "brocket"
 
+require 'logger_pipe/runner'
+
 module BRocket
   class Git < Configurable
 
     desc "guard_clean", "Raise error if some difference exists."
     def guard_clean
-      clean? && committed? or error("There are files that need to be committed first. Run `git status`")
-      success("[git guard_clean] OK")
+      (clean? && committed?) ?
+        success("[git guard_clean] OK") :
+        error("There are files that need to be committed first. Run `git status`")
     end
 
     desc "push", "push commit and tag it"
@@ -23,11 +26,17 @@ module BRocket
       end
 
       def clean?
-        sh_with_code("git diff --exit-code")[1] == 0
+        sh("git diff --exit-code")
+        return true
+      rescue LoggerPipe::Failure
+        return false
       end
 
       def committed?
-        sh_with_code("git diff-index --quiet --cached HEAD")[1] == 0
+        sh("git diff-index --quiet --cached HEAD")
+        return true
+      rescue LoggerPipe::Failure
+        return false
       end
 
       def tag_version
@@ -36,7 +45,7 @@ module BRocket
         yield if block_given?
       rescue
         $stderr.puts "Untagging #{version_tag} due to error."
-        sh_with_code "git tag -d #{version_tag}"
+        sh "git tag -d #{version_tag}"
         raise
       end
 
@@ -47,9 +56,11 @@ module BRocket
       end
 
       def perform_git_push(options = '')
-        cmd = "git push #{options}"
-        out, code = sh_with_code(cmd)
-        error "Couldn't git push. `#{cmd}' failed with the following output:\n\n#{out}\n" unless code == 0
+        begin
+          sh("git push #{options}")
+        rescue LoggerPipe::Failure
+          error "Couldn't git push. `#{cmd}`"
+        end
       end
 
       def already_tagged?

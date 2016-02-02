@@ -1,5 +1,9 @@
 require 'spec_helper'
 
+require 'logger_pipe'
+LoggerPipe
+p LoggerPipe
+
 describe BRocket::Git do
 
   let(:subject){ BRocket::Git.new }
@@ -27,6 +31,37 @@ describe BRocket::Git do
       end
     end
 
+    describe :guard_clean do
+      it :clean_and_commited do
+        expect(subject).to receive(:sh).with("git diff --exit-code")
+        expect(subject).to receive(:sh).with("git diff-index --quiet --cached HEAD")
+        expect(subject).to receive(:success).with(an_instance_of(String))
+        subject.guard_clean
+      end
+
+      context :error do
+        it :clean_and_not_commited do
+          expect(subject).to receive(:sh).with("git diff --exit-code")
+          expect(subject).to receive(:sh).with("git diff-index --quiet --cached HEAD").and_raise(LoggerPipe::Failure.new("not committed", nil))
+        end
+
+        it :not_clean_and_commited do
+          expect(subject).to receive(:sh).with("git diff --exit-code").and_raise(LoggerPipe::Failure.new("not clean", nil))
+          allow(subject).to receive(:sh).with("git diff-index --quiet --cached HEAD")
+        end
+
+        it :not_clean_and_not_commited do
+          expect(subject).to receive(:sh).with("git diff --exit-code").and_raise(LoggerPipe::Failure.new("not clean", nil))
+          allow(subject).to receive(:sh).with("git diff-index --quiet --cached HEAD").and_raise(LoggerPipe::Failure.new("not committed", nil))
+        end
+
+        after do
+          expect(subject).to receive(:error).with(an_instance_of(String))
+          expect(subject).not_to receive(:success).with(an_instance_of(String))
+          subject.guard_clean
+        end
+      end
+    end
   end
 
 end
