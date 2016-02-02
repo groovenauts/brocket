@@ -126,6 +126,10 @@ Set the registry host name to push not to hub.docker.com .
 
 Set the user name on the registry host to push.
 
+#### DOCKER_PUSH_EXTRA_TAG
+
+Set the another tag to push. e.g. "latest"
+
 
 ### For more information
 
