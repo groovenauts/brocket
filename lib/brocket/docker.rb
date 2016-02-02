@@ -35,7 +35,7 @@ module BRocket
     def push
       info("[docker push] starting")
       c = config_hash
-      img_name = config_image_name(c)
+      img_name = config_image_name
       version = sub(VersionFile).current
       cmd = "docker push #{img_name}:#{version}"
       sh(cmd)
