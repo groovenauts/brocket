@@ -41,8 +41,8 @@ describe BRocket::Docker do
     end
   end
 
-
   describe "Dockerfile-gcr" do
+    let(:original_image_name){ "rails-example" }
     let(:gcr_image_name){ "asia.gcr.io/groovenauts/rails-example" }
     let(:filepath){ File.expand_path("../Dockerfiles/Dockerfile-gcr", __FILE__) }
     before{ allow(BRocket).to receive(:user_pwd).and_return(File.dirname(filepath)) }
@@ -53,7 +53,11 @@ describe BRocket::Docker do
 
     describe :push do
       it do
-        expect(subject).to receive(:sh).with("gcloud docker push #{gcr_image_name}:#{version}")
+        expected_cmd = [
+          "docker tag -f #{original_image_name}:#{version} #{gcr_image_name}:#{version}",
+          "gcloud docker push #{gcr_image_name}:#{version}"
+        ].join(' && ')
+        expect(subject).to receive(:sh).with(expected_cmd)
         subject.push
       end
     end
