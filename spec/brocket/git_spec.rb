@@ -31,7 +31,7 @@ describe BRocket::Git do
     end
   end
 
-  describe "Dockerfile-basic" do
+  describe "Dockerfile-git-tag" do
     let(:filepath){ File.expand_path("../Dockerfiles/Dockerfile-git-tag", __FILE__) }
     let(:version_path){ File.expand_path("../Dockerfiles/VERSION", __FILE__) }
     before do
