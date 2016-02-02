@@ -1,6 +1,8 @@
 #
-# [config] IMAGE_NAME: "groovenauts/rails-example"
+# [config] IMAGE_NAME: "rails-example"
 # [config] DOCKER_PUSH_COMMAND: "gcloud docker push"
+# [config] DOCKER_PUSH_REGISTRY: "asia.gcr.io"
+# [config] DOCKER_PUSH_USERNAME: "groovenauts"
 #
 
 FROM groovenauts/ruby:2.1.2
