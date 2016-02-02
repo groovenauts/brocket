@@ -67,8 +67,8 @@ module BRocket
       def build_push_command
         img_name = config_image_name
         version = sub(VersionFile).current
-        cmd = "docker push #{img_name}:#{version}"
-        return cmd
+        build_cmd = config_hash['DOCKER_PUSH_COMMAND'] || 'docker push'
+        return "#{build_cmd} #{img_name}:#{version}"
       end
 
       def execute(commands)
