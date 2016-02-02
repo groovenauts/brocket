@@ -18,4 +18,22 @@ describe BRocket::Base do
       subject.sh(cmd)
     end
   end
+
+  describe :verbose do
+    let(:msg){ "FOOO" }
+    it "without verbose" do
+      expect(BRocket.logger).not_to receive(:debug).with(msg)
+      subject.verbose(msg)
+    end
+    it "without verbose" do
+      subject.options = {verbose: true}
+      called = false
+      expect(BRocket.logger).to receive(:debug) do |actual_msg|
+        expect(actual_msg.strip).to match /#{msg}/
+        called = true
+      end
+      subject.verbose(msg)
+      expect(called).to be_truthy
+    end
+  end
 end
