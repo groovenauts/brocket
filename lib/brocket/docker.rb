@@ -34,10 +34,7 @@ module BRocket
     desc "push", "push docker image to docker hub"
     def push
       info("[docker push] starting")
-      c = config_hash
-      img_name = config_image_name
-      version = sub(VersionFile).current
-      cmd = "docker push #{img_name}:#{version}"
+      cmd = build_push_command
       sh(cmd)
       success("[docker push] OK")
     end
@@ -64,6 +61,13 @@ module BRocket
           end
         end
         cmd << ' .'
+        return cmd
+      end
+
+      def build_push_command
+        img_name = config_image_name
+        version = sub(VersionFile).current
+        cmd = "docker push #{img_name}:#{version}"
         return cmd
       end
 
