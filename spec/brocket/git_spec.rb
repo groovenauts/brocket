@@ -112,6 +112,23 @@ describe BRocket::Git do
         end
       end
 
+      context "with dryrun" do
+        it do
+          subject.options = {dryrun: true}.update(subject.options)
+          # Call `git tag` even if --dryrun is given
+          expect(LoggerPipe).to receive(:run).
+                                 with(BRocket.logger, "git tag", returns: :stdout, logging: :stderr).
+                                 and_return(%w[0.9.1 0.9.2].join("\n"))
+          opts = {dry_run: true, returns: :none, logging: :both}
+          expect(LoggerPipe).to receive(:run).with(BRocket.logger, "git tag -a -m \"Version containers/rails_example/1.0.0\" containers/rails_example/1.0.0", opts)
+          expect($stdout).to receive(:puts).with(/tagged containers\/rails_example\/1\.0\.0/i)
+          expect(LoggerPipe).to receive(:run).with(BRocket.logger, "git push", opts)
+          expect(LoggerPipe).to receive(:run).with(BRocket.logger, "git push --tags", opts)
+          expect($stdout).to receive(:puts).with(/pushed/i)
+          subject.push
+        end
+      end
+
     end
   end
 
