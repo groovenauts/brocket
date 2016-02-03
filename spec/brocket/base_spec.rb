@@ -7,11 +7,11 @@ describe BRocket::Base do
   describe :sh do
     let(:cmd){ 'echo "FOO"' }
     it "without dryrun" do
-      expect(LoggerPipe).to receive(:run).with(BRocket.logger, cmd, dry_run: nil)
+      expect(LoggerPipe).to receive(:run).with(BRocket.logger, cmd, dry_run: nil, returns: :none, logging: :both)
     end
     it "with dryrun" do
       subject.options = {dryrun: true}
-      expect(LoggerPipe).to receive(:run).with(BRocket.logger, cmd, dry_run: true)
+      expect(LoggerPipe).to receive(:run).with(BRocket.logger, cmd, dry_run: true, returns: :none, logging: :both)
     end
 
     after do

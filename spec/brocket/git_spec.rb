@@ -73,7 +73,7 @@ describe BRocket::Git do
 
     describe :push do
       it :valid do
-        expect(subject).to receive(:sh).with("git tag").and_return(%w[0.9.1 0.9.2].join("\n"))
+        expect(subject).to receive(:sh_stdout).with("git tag").and_return(%w[0.9.1 0.9.2].join("\n"))
         expect(subject).to receive(:sh).with("git tag -a -m \"Version containers/rails_example/1.0.0\" containers/rails_example/1.0.0")
         expect($stdout).to receive(:puts).with(/tagged containers\/rails_example\/1\.0\.0/i)
         expect(subject).to receive(:sh).with("git push")
@@ -82,14 +82,14 @@ describe BRocket::Git do
         subject.push
       end
       it :already_tagged do
-        expect(subject).to receive(:sh).with("git tag").and_return(%w[0.9.1 0.9.2 1.0.0 1.0.1].map{|v| "containers/rails_example/#{v}"}.join("\n"))
+        expect(subject).to receive(:sh_stdout).with("git tag").and_return(%w[0.9.1 0.9.2 1.0.0 1.0.1].map{|v| "containers/rails_example/#{v}"}.join("\n"))
         expect($stderr).to receive(:puts).with(/tag .+ already .+ created/i)
         subject.push
       end
 
       context :error do
         before do
-          expect(subject).to receive(:sh).with("git tag").and_return(%w[0.9.1 0.9.2].join("\n"))
+          expect(subject).to receive(:sh_stdout).with("git tag").and_return(%w[0.9.1 0.9.2].join("\n"))
         end
 
         it "do untagging on error at git tag" do
@@ -109,6 +109,23 @@ describe BRocket::Git do
           expect($stderr).to receive(:puts).with(/untagging/i)
           expect(subject).to receive(:sh).with("git tag -d containers/rails_example/1.0.0")
           expect{ subject.push }.to raise_error(LoggerPipe::Failure)
+        end
+      end
+
+      context "with dryrun" do
+        it do
+          subject.options = {dryrun: true}.update(subject.options)
+          # Call `git tag` even if --dryrun is given
+          expect(LoggerPipe).to receive(:run).
+                                 with(BRocket.logger, "git tag", returns: :stdout, logging: :stderr).
+                                 and_return(%w[0.9.1 0.9.2].join("\n"))
+          opts = {dry_run: true, returns: :none, logging: :both}
+          expect(LoggerPipe).to receive(:run).with(BRocket.logger, "git tag -a -m \"Version containers/rails_example/1.0.0\" containers/rails_example/1.0.0", opts)
+          expect($stdout).to receive(:puts).with(/tagged containers\/rails_example\/1\.0\.0/i)
+          expect(LoggerPipe).to receive(:run).with(BRocket.logger, "git push", opts)
+          expect(LoggerPipe).to receive(:run).with(BRocket.logger, "git push --tags", opts)
+          expect($stdout).to receive(:puts).with(/pushed/i)
+          subject.push
         end
       end
 
