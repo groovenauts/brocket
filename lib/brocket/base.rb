@@ -44,7 +44,11 @@ module BRocket
       end
 
       def sh(cmd)
-        LoggerPipe.run(logger, cmd, dry_run: dryrun?)
+        LoggerPipe.run(logger, cmd, dry_run: dryrun?, returns: :none, logging: :both)
+      end
+
+      def sh_stdout(cmd)
+        LoggerPipe.run(logger, cmd, returns: :stdout, logging: :stderr) # ignore dryrun?
       end
 
     end

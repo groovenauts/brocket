@@ -61,7 +61,7 @@ module BRocket
       end
 
       def already_tagged?
-        if sh('git tag').split(/\n/).include?(version_tag)
+        if sh_stdout('git tag').split(/\n/).include?(version_tag)
           $stderr.puts "Tag #{version_tag} has already been created."
           true
         end
