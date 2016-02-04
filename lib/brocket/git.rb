@@ -7,9 +7,15 @@ module BRocket
 
     desc "guard_clean", "Raise error if some difference exists."
     def guard_clean
-      (clean? && committed?) ?
-        success("[git guard_clean] OK") :
+      if (clean? && committed?)
+        if already_tagged? && !same_commit_as?(version_tag)
+          error("#{version_tag} is already tagged to another commit")
+        else
+          success("[git guard_clean] OK")
+        end
+      else
         error("There are files that need to be committed first. Run `git status`")
+      end
     end
 
     desc "push", "push commit and tag it"
@@ -71,6 +77,14 @@ module BRocket
         prefix = sub(Docker).config_hash["GIT_TAG_PREFIX"] || ""
         version = sub(VersionFile).current
         "%s%s" % [prefix, version]
+      end
+
+      def same_commit_as?(tag)
+        get_sha(tag) == get_sha("HEAD")
+      end
+
+      def get_sha(obj)
+        sh_stdout("git show #{obj} --format=\"%H\" --quiet").strip
       end
 
     end

@@ -57,7 +57,7 @@ module BRocket
       def build_build_command
         img_name = config_image_name
         version = sub(VersionFile).current
-        cmd = "docker build -t #{img_name}:#{version}"
+        cmd = sudo("docker build -t #{img_name}:#{version}")
         if options[:dockerfile]
           fp = config_relpath
           unless fp == "Dockerfile"
@@ -77,12 +77,12 @@ module BRocket
         build_cmd = config_hash['DOCKER_PUSH_COMMAND'] || 'docker push'
         cmd = [
           (registry || username) ?
-            "docker tag -f #{config_image_name}:#{version} #{img_name}:#{version}" : nil,
+            sudo("docker tag -f #{config_image_name}:#{version} #{img_name}:#{version}") : nil,
           (registry || username) && extra_tag ?
-            "docker tag -f #{config_image_name}:#{version} #{img_name}:#{extra_tag}" : nil,
-          "#{build_cmd} #{img_name}:#{version}",
+            sudo("docker tag -f #{config_image_name}:#{version} #{img_name}:#{extra_tag}") : nil,
+          sudo("#{build_cmd} #{img_name}:#{version}"),
           extra_tag ?
-            "#{build_cmd} #{img_name}:#{extra_tag}" : nil,
+            sudo("#{build_cmd} #{img_name}:#{extra_tag}") : nil,
         ].compact.join(' && ')
         return cmd
       end
@@ -92,6 +92,18 @@ module BRocket
         commands = commands.is_a?(Array) ? commands : [commands]
         commands = commands.compact.map(&:strip).reject(&:empty?)
         commands.each{|cmd| sh(cmd) }
+      end
+
+      def sudo(cmd)
+        if @sudo_required.nil?
+          @sudo_required =
+            case options[:use_sudo_for_docker]
+            when /auto/i then !system("docker ps >/dev/null 2>/dev/null")
+            when /true/i then true
+            else false
+            end
+        end
+        @sudo_required ? "sudo #{cmd}" : cmd
       end
     end
 

@@ -40,6 +40,11 @@ describe BRocket::Git do
     end
 
     describe :guard_clean do
+      before do
+        allow(subject).to receive(:sh_stdout).with("git tag").and_return(%w[0.9.1 0.9.2].map{|v| "containers/rails_example/#{v}"}.join("\n"))
+        allow($stderr).to receive(:puts).with(/tag .+ already .+ created/i)
+      end
+
       it :clean_and_commited do
         expect(subject).to receive(:sh).with("git diff --exit-code")
         expect(subject).to receive(:sh).with("git diff-index --quiet --cached HEAD")
@@ -66,6 +71,33 @@ describe BRocket::Git do
         after do
           expect(subject).to receive(:error).with(an_instance_of(String))
           expect(subject).not_to receive(:success).with(an_instance_of(String))
+          subject.guard_clean
+        end
+      end
+
+      context :already_tagged do
+        let(:sha01){ "7693b087d10319df5eaa78f016fd705a53f1d448" }
+        let(:sha02){ "a8dd73a3d43dd19077e333b71db8f2d86140df9e" }
+
+        before do
+          expect(subject).to receive(:sh).with("git diff --exit-code")
+          expect(subject).to receive(:sh).with("git diff-index --quiet --cached HEAD")
+          expect(subject).to receive(:sh_stdout).with("git tag").and_return(%w[0.9.1 0.9.2 1.0.0 1.0.1].map{|v| "containers/rails_example/#{v}"}.join("\n"))
+        end
+
+        it "The SHAs are the same" do
+          expect(subject).to receive(:sh_stdout).with('git show containers/rails_example/1.0.0 --format="%H" --quiet').and_return(sha01)
+          expect(subject).to receive(:sh_stdout).with('git show HEAD --format="%H" --quiet').and_return(sha01)
+          expect(subject).to receive(:success).with(an_instance_of(String))
+          expect(subject).not_to receive(:error).with(an_instance_of(String))
+          subject.guard_clean
+        end
+
+        it "The HEAD SHA is different from the tag SHA" do
+          expect(subject).to receive(:sh_stdout).with('git show containers/rails_example/1.0.0 --format="%H" --quiet').and_return(sha01)
+          expect(subject).to receive(:sh_stdout).with('git show HEAD --format="%H" --quiet').and_return(sha02)
+          expect(subject).not_to receive(:success).with(an_instance_of(String))
+          expect(subject).to receive(:error).with(/already tagged/)
           subject.guard_clean
         end
       end
