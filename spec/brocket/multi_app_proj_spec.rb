@@ -136,6 +136,7 @@ describe :multi_app_proj do
         # obj.options = {dockerfile: docker_relpath}
         obj
       end
+      before{ allow(docker_obj).to receive(:system).with("docker ps >/dev/null 2>/dev/null").and_return(true) }
       it{ expect(docker_obj.working_dir).to eq File.expand_path("..", base_dir) }
       it{ expect(docker_obj.config_filepath).to eq File.expand_path("Dockerfile", base_dir) }
       it{ expect(docker_obj.config_relpath ).to eq "app2/Dockerfile" }

@@ -14,6 +14,8 @@ describe BRocket::Docker do
     allow(BRocket::VersionFile).to receive(:new).and_return(version_file)
   end
 
+  before{ allow(subject).to receive(:system).with("docker ps >/dev/null 2>/dev/null").and_return(true) }
+
   describe "Dockerfile-basic" do
     let(:filepath){ File.expand_path("../Dockerfiles/Dockerfile-basic", __FILE__) }
     before{ allow(BRocket).to receive(:user_pwd).and_return(File.dirname(filepath)) }
