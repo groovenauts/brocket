@@ -10,7 +10,7 @@ describe BRocket::Docker do
   let(:expected_options){ {"dockerfile"=>"Dockerfile"} }
   before do
     version_file = double(:version_file, current: version)
-    allow(version_file).to receive(:options=).with(expected_options)
+    allow(version_file).to receive(:options=).with(Hash)
     allow(BRocket::VersionFile).to receive(:new).and_return(version_file)
   end
 
@@ -186,6 +186,64 @@ describe BRocket::Docker do
         expect(subject).to receive(:sh).with("jkl")
         expect(subject).to receive(:sh).with("mno")
         subject.call_after_build
+      end
+    end
+  end
+
+  describe "use_sudo_for_docker" do
+    let(:filepath){ File.expand_path("../Dockerfiles/Dockerfile-basic", __FILE__) }
+    before{ allow(BRocket).to receive(:user_pwd).and_return(File.dirname(filepath)) }
+    before{ subject.options = {dockerfile: filepath} }
+
+    context "auto and need sudo" do
+      before{ subject.options = {use_sudo_for_docker: "auto"}.update(subject.options) }
+      before{ allow(subject).to receive(:system).with("docker ps >/dev/null 2>/dev/null").and_return(false) }
+      it :build do
+        expect(subject).to receive(:sh).with("sudo docker build -t #{image_name}:#{version} -f Dockerfile-basic .")
+        subject.build
+      end
+      it :push do
+        expect(subject).to receive(:sh).with("sudo docker push #{image_name}:#{version}")
+        subject.push
+      end
+    end
+
+    context "auto and don't need sudo" do
+      before{ subject.options = {use_sudo_for_docker: "auto"}.update(subject.options) }
+      before{ allow(subject).to receive(:system).with("docker ps >/dev/null 2>/dev/null").and_return(true) }
+      it :build do
+        expect(subject).to receive(:sh).with("docker build -t #{image_name}:#{version} -f Dockerfile-basic .")
+        subject.build
+      end
+      it :push do
+        expect(subject).to receive(:sh).with("docker push #{image_name}:#{version}")
+        subject.push
+      end
+    end
+
+    context "true" do
+      before{ subject.options = {use_sudo_for_docker: "true"}.update(subject.options) }
+      before{ allow(subject).to receive(:system).with("docker ps >/dev/null 2>/dev/null").and_return(false) }
+      it :build do
+        expect(subject).to receive(:sh).with("sudo docker build -t #{image_name}:#{version} -f Dockerfile-basic .")
+        subject.build
+      end
+      it :push do
+        expect(subject).to receive(:sh).with("sudo docker push #{image_name}:#{version}")
+        subject.push
+      end
+    end
+
+    context "false" do
+      before{ subject.options = {use_sudo_for_docker: "false"}.update(subject.options) }
+      before{ allow(subject).to receive(:system).with("docker ps >/dev/null 2>/dev/null").and_return(true) }
+      it :build do
+        expect(subject).to receive(:sh).with("docker build -t #{image_name}:#{version} -f Dockerfile-basic .")
+        subject.build
+      end
+      it :push do
+        expect(subject).to receive(:sh).with("docker push #{image_name}:#{version}")
+        subject.push
       end
     end
   end
