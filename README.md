@@ -1,16 +1,19 @@
 # brocket
 
-brocket supports to build docker image with VERSION file and git.
-You can define setup and teardown around `docker build` by writing
-config IMAGE_NAME and hooks like BEFORE_BUILD and AFTER_BUILD.
+brocket supports to build docker image with versioning by using git.
+You can run scripts around building with hook configurations and
+custumize several configurations to build.
 
 ## Behavior
 
 - `brocket release`
-    1. check the local repository is clean and commited
-    2. same as `brocket docker build`
-    3. same as `brocket git push`
-    4. docker push
+    1. `brocket git guard_clean`
+    2. `brocket docker build`
+    3. `brocket git push`
+    4. `brocket docker push`
+- `brocket git guard_clean`
+    1. Check whether there is no difference on working directory.
+    2. Check whether there is no difference on index(stage)
 - `brocket docker build`
     1. cd WORKING_DIR
     2. call BEFORE_BUILD
@@ -22,6 +25,9 @@ config IMAGE_NAME and hooks like BEFORE_BUILD and AFTER_BUILD.
     1. git tag
     2. git push
         - git tag -d if error
+- `brocket docker push`
+    1. `docker tag` to push to remote registry
+    2. `docker push` (or run other push command)
 
 ## Installation
 
@@ -96,40 +102,16 @@ https://github.com/tengine/brocket/blob/master/spec/brocket/Dockerfiles/Dockerfi
 
 ### Other configurations
 
-#### WORKING_DIR
-
-The directory which the build command and hooks are executed in.
-
-#### VERSION_FILE
-
-A text file to define the container version. It must be a relative path from Dockerfile.
-
-#### VERSION_SCRIPT
-
-A script to get the container version. It runs in the directory of Dockerfile.
-
-`ruby -r ./lib/test_gem/version.rb -e 'puts TestGem::VERSION'`
-
-#### GIT_TAG_PREFIX
-
-The prefix for the version tags on git.
-
-#### DOCKER_PUSH_COMMAND
-
-Set `gcloud docker push` to push to [Google Cloud Registry](https://cloud.google.com/container-registry/docs/).
-
-#### DOCKER_PUSH_REGISTRY
-
-Set the registry host name to push not to hub.docker.com .
-
-#### DOCKER_PUSH_USERNAME
-
-Set the user name on the registry host to push.
-
-#### DOCKER_PUSH_EXTRA_TAG
-
-Set the another tag to push. e.g. "latest"
-
+| Name         | Description          |
+|--------------|----------------------|
+| WORKING_DIR  | The directory which the build command and hooks are executed in. |
+| VERSION_FILE | A text file to define the container version. It must be a relative path from Dockerfile. |
+| VERSION_SCRIPT | A script to get the container version. It runs in the directory of Dockerfile. `ruby -r ./lib/test_gem/version.rb -e 'puts TestGem::VERSION'` |
+| GIT_TAG_PREFIX | The prefix for the version tags on git. |
+| DOCKER_PUSH_COMMAND | Set `gcloud docker push` to push to [Google Cloud Registry](https://cloud.google.com/container-registry/docs/). |
+| DOCKER_PUSH_REGISTRY | Set the registry host name to push not to hub.docker.com . |
+| DOCKER_PUSH_USERNAME | Set the user name on the registry host to push. |
+| DOCKER_PUSH_EXTRA_TAG | Set the another tag to push. e.g. "latest" |
 
 ### For more information
 
@@ -138,7 +120,6 @@ brocket help
 ```
 
 or https://github.com/tengine/brocket/tree/master/spec/brocket
-
 
 
 ## Contributing

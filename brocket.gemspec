@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = BRocket::VERSION
   spec.authors       = ["akima"]
   spec.email         = ["t-akima@groovenauts.jp"]
-  spec.summary       = %q{supports to build Docker Container with VERSION}
-  spec.description   = %q{supports to build Docker Container with VERSION}
+  spec.summary       = %q{brocket supports to build docker image with versioning by using git.}
+  spec.description   = %q{brocket supports to build docker image with versioning by using git.}
   spec.homepage      = ""
   spec.license       = "MIT"
 
