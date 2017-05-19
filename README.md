@@ -1,5 +1,7 @@
 # brocket
 
+[![Build Status](https://travis-ci.org/groovenauts/brocket.svg?branch=master)](https://travis-ci.org/groovenauts/brocket)
+
 brocket supports to build docker image with VERSION file and git.
 You can define setup and teardown around `docker build` by writing
 config IMAGE_NAME and hooks like BEFORE_BUILD and AFTER_BUILD.
