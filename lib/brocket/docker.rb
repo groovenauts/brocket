@@ -77,9 +77,9 @@ module BRocket
         build_cmd = config_hash['DOCKER_PUSH_COMMAND'] || 'docker push'
         cmd = [
           (registry || username) ?
-            sudo("docker tag -f #{config_image_name}:#{version} #{img_name}:#{version}") : nil,
+            sudo("docker tag #{config_image_name}:#{version} #{img_name}:#{version}") : nil,
           (registry || username) && extra_tag ?
-            sudo("docker tag -f #{config_image_name}:#{version} #{img_name}:#{extra_tag}") : nil,
+            sudo("docker tag #{config_image_name}:#{version} #{img_name}:#{extra_tag}") : nil,
           sudo("#{build_cmd} #{img_name}:#{version}"),
           extra_tag ?
             sudo("#{build_cmd} #{img_name}:#{extra_tag}") : nil,
