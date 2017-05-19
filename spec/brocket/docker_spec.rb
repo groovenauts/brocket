@@ -60,7 +60,7 @@ describe BRocket::Docker do
     describe :push do
       it do
         expected_cmd = [
-          "docker tag -f #{original_image_name}:#{version} #{gcr_image_name}:#{version}",
+          "docker tag #{original_image_name}:#{version} #{gcr_image_name}:#{version}",
           "gcloud docker push #{gcr_image_name}:#{version}"
         ].join(' && ')
         expect(subject).to receive(:sh).with(expected_cmd)
@@ -80,8 +80,8 @@ describe BRocket::Docker do
     describe :push do
       it do
         expected_cmd = [
-          "docker tag -f #{original_image_name}:#{version} #{gcr_image_name}:#{version}",
-          "docker tag -f #{original_image_name}:#{version} #{gcr_image_name}:latest",
+          "docker tag #{original_image_name}:#{version} #{gcr_image_name}:#{version}",
+          "docker tag #{original_image_name}:#{version} #{gcr_image_name}:latest",
           "gcloud docker push #{gcr_image_name}:#{version}",
           "gcloud docker push #{gcr_image_name}:latest",
         ].join(' && ')
