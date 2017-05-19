@@ -118,7 +118,7 @@ The prefix for the version tags on git.
 
 #### DOCKER_PUSH_COMMAND
 
-Set `gcloud docker push` to push to [Google Cloud Registry](https://cloud.google.com/container-registry/docs/).
+Set `gcloud docker -- push` to push to [Google Cloud Registry](https://cloud.google.com/container-registry/docs/).
 
 #### DOCKER_PUSH_REGISTRY
 
