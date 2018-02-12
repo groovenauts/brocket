@@ -8,6 +8,11 @@ type Docker struct {
 }
 
 var (
+	ConfigPathFlag = cli.StringFlag{
+		Name:  "config,c",
+		Usage: "Path to config YAML file",
+	}
+
 	DockerfileFlag = cli.StringFlag{
 		Name:  "dockerfile,f",
 		Usage: "Dockerfile to build",
@@ -26,6 +31,7 @@ func (b *Docker) BuildCommand() cli.Command {
 		Usage:  "Build docker image",
 		Action: b.Build,
 		Flags: []cli.Flag{
+			ConfigPathFlag,
 			DockerfileFlag,
 			UseSudoForDockerFlag,
 		},
@@ -42,6 +48,7 @@ func (b *Docker) PushCommand() cli.Command {
 		Usage:  "Push docker image to registry",
 		Action: b.Push,
 		Flags: []cli.Flag{
+			ConfigPathFlag,
 			DockerfileFlag,
 			UseSudoForDockerFlag,
 		},
