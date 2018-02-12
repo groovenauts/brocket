@@ -1,0 +1,34 @@
+## Test cases
+
+| directory                  | Dockerfile                       |  brocket.yml         | WORKING_DIR | -f                     | -c                   | result                                          | workingDir |
+|----------------------------|----------------------------------|----------------------|-------------|------------------------|----------------------|-------------------------------------------------|------------|
+| no_dockerfile_case0        |      -                           |      -               | -           | -                      | -                    | NG: Dockefile not found                         | N/A        |
+| no_dockerfile_case0        |      -                           |      -               | -           | -                      | ./sub/brocket1.yaml  | NG: Dockefile not found                         | N/A        |
+| no_dockerfile_case0        |      -                           |      -               | -           | ./app1/Dockerfile-prod | -                    | NG: ./app1/Dockerfile-prod not found            | N/A        |
+| no_dockerfile_case0        |      -                           |      -               | -           | ./app1/Dockerfile-prod | ./sub/brocket1.yaml  | NG: ./app1/Dockerfile-prod not found            | N/A        |
+| no_dockerfile_case1        |      -                           |  ./brocket.yml       | -           | -                      | -                    | NG: Dockefile not found                         | N/A        |
+| no_dockerfile_case1        |      -                           |  ./brocket.yml       | -           | ./app1/Dockerfile-prod | -                    | NG: ./app1/Dockerfile-prod not found            | N/A        |
+| no_dockerfile_case2        |      -                           |  ./sub/brocket1.yaml | -           | -                      | ./sub/brocket1.yaml  | NG: Dockefile not found                         | N/A        |
+| no_dockerfile_case2        |      -                           |  ./sub/brocket1.yaml | -           | ./app1/Dockerfile-prod | ./sub/brocket1.yaml  | NG: ./app1/Dockerfile-prod not found            | N/A        |
+| dockerfile_without_config0 | ./Dockerfile(no cofig)           |      -               | -           | -                      | -                    | NG: Dockerfile has no configuration             | N/A        |
+| dockerfile_without_config0 | ./Dockerfile(no cofig)           |      -               | -           | -                      | ./sub/brocket1.yaml  | NG: Dockerfile has no configuration             | N/A        |
+| dockerfile_without_config1 | ./app1/Dockerfile-prod(no cofig) |      -               | -           | ./app1/Dockerfile-prod | -                    | NG: ./app1/Dockerfile-prod has no configuration | N/A        |
+| dockerfile_without_config1 | ./app1/Dockerfile-prod(no cofig) |      -               | -           | ./app1/Dockerfile-prod | ./sub/brocket1.yaml  | NG: ./app1/Dockerfile-prod has no configuration | N/A        |
+| dockerfile_with_config0    | ./Dockerfile(cofig)              |      -               | .           | -                      | ./sub/brocket1.yaml  | NG: ./sub/brocket1.yaml not found               | .          |
+| dockerfile_with_config0    | ./Dockerfile(cofig)              |      -               | .           | -                      | -                    | OK                                              | .          |
+| dockerfile_with_config1    | ./Dockerfile(cofig)              |      -               | build       | -                      | -                    | OK                                              | ./build    |
+| dockerfile_with_config2    | ./app1/Dockerfile-prod(cofig)    |      -               | .           | ./app1/Dockerfile-prod | ./sub/brocket1.yaml  | NG: ./sub/brocket1.yaml not found               | N/A        |
+| dockerfile_with_config2    | ./app1/Dockerfile-prod(cofig)    |      -               | .           | ./app1/Dockerfile-prod | -                    | OK                                              | ./app1     |
+| dockerfile_with_config3    | ./app1/Dockerfile-prod(cofig)    |      -               | ..          | ./app1/Dockerfile-prod | -                    | OK                                              | .          |
+| root_brocket_yaml_case0    | ./Dockerfile(no cofig)           |  ./brocket.yml       | .           | -                      | -                    | OK                                              | .          |
+| root_brocket_yaml_case1    | ./Dockerfile(no cofig)           |  ./brocket.yml       | build       | -                      | -                    | OK                                              | ./build    |
+| root_brocket_yaml_case2    | ./Dockerfile(cofig)              |  ./brocket.yml       | .           | -                      | -                    | OK                                              | .          |
+| root_brocket_yaml_case3    | ./app1/Dockerfile-prod(no cofig) |  ./brocket.yml       | .           | ./app1/Dockerfile-prod | -                    | OK                                              | .          |
+| root_brocket_yaml_case4    | ./app1/Dockerfile-prod(no cofig) |  ./brocket.yml       | app1        | ./app1/Dockerfile-prod | -                    | OK                                              | ./app1     |
+| root_brocket_yaml_case5    | ./app1/Dockerfile-prod(cofig)    |  ./brocket.yml       | .           | ./app1/Dockerfile-prod | -                    | OK                                              | .          |
+| sub_brocket_yaml_case0     | ./Dockerfile(no cofig)           |  ./sub/brocket1.yaml | .           | -                      | ./sub/brocket1.yaml  | OK                                              | ./sub      |
+| sub_brocket_yaml_case1     | ./Dockerfile(no cofig)           |  ./sub/brocket1.yaml | ..          | -                      | ./sub/brocket1.yaml  | OK                                              | .          |
+| sub_brocket_yaml_case2     | ./Dockerfile(cofig)              |  ./sub/brocket1.yaml | .           | -                      | ./sub/brocket1.yaml  | OK                                              | ./sub      |
+| sub_brocket_yaml_case3     | ./app1/Dockerfile-prod(no cofig) |  ./sub/brocket1.yaml | .           | ./app1/Dockerfile-prod | ./sub/brocket1.yaml  | OK                                              | ./sub      |
+| sub_brocket_yaml_case4     | ./app1/Dockerfile-prod(no cofig) |  ./sub/brocket1.yaml | ../app1     | ./app1/Dockerfile-prod | ./sub/brocket1.yaml  | OK                                              | ./app1     |
+| sub_brocket_yaml_case5     | ./app1/Dockerfile-prod(cofig)    |  ./sub/brocket1.yaml | .           | ./app1/Dockerfile-prod | ./sub/brocket1.yaml  | OK                                              | ./sub      |

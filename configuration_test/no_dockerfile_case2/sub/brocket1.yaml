@@ -1,0 +1,3 @@
+IMAGE_NAME: "app1"
+WORKING_DIR: ".."
+VERSION_FILE: "VERSION.txt"
