@@ -31,6 +31,9 @@ func (c *Configuration) Load() error {
 	if err != nil {
 		switch err.(type) {
 		case *FileNotFound:
+			if c.ConfigPath != "" {
+				return err
+			}
 			if configSource == "" {
 				return fmt.Errorf("%s has no configuration", dockerfilePath)
 			}

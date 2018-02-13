@@ -38,6 +38,7 @@ func TestConfiguration(t *testing.T) {
 	basePath = RuntimeGopathPattern.ReplaceAllString(basePath, "")
 
 	dockerfilePathPtn := regexp.MustCompile(`:dockerfilePath`)
+	configPathPtn := regexp.MustCompile(`:configPath`)
 
 	type Ptn struct {
 		No         int
@@ -70,7 +71,15 @@ func TestConfiguration(t *testing.T) {
 					dockerfileName = "Dockerfile"
 				}
 				dockerfilePath := filepath.Join(basePath, ptn.Dir, dockerfileName)
+
+				configFileName := ptn.ConfigPath
+				if configFileName == "" {
+					configFileName = "brocket.{yml,yaml}"
+				}
+				configFilePath := filepath.Join(basePath, ptn.Dir, configFileName)
+
 				msg := dockerfilePathPtn.ReplaceAllString(ptn.ErrFormat, dockerfilePath)
+				msg = configPathPtn.ReplaceAllString(msg, configFilePath)
 				assert.Equal(t, msg, err.Error(), fmt.Sprintf("%v", ptn))
 			}
 		})
