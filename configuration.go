@@ -27,6 +27,14 @@ func (c *Configuration) Load() error {
 	return nil
 }
 
+type FileNotFound struct {
+	Path string
+}
+
+func (err *FileNotFound) Error() string {
+	return fmt.Sprintf("%s not found", err.Path)
+}
+
 func (c *Configuration) FilepathWithCheck(relPath string, candidates ...string) (string, error) {
 	var relPaths []string
 	if relPath != "" {
@@ -50,7 +58,7 @@ func (c *Configuration) FilepathWithCheck(relPath string, candidates ...string) 
 			return path, nil
 		}
 	}
-	return "", fmt.Errorf("%s not found", strings.Join(absPaths, " or "))
+	return "", &FileNotFound{strings.Join(absPaths, " or ")}
 }
 
 func (c *Configuration) FileExist(path string) (bool, error) {
