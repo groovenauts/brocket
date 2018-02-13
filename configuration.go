@@ -7,6 +7,8 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+
+	"gopkg.in/yaml.v2"
 )
 
 type Configuration struct {
@@ -116,5 +118,11 @@ func (c *Configuration) ExtractConfigSource(path string) (string, error) {
 }
 
 func (c *Configuration) LoadAsYaml(source []byte) error {
+	err := yaml.Unmarshal(source, c)
+	if err != nil {
+		return fmt.Errorf("Failed to yaml.Unmarshal because of %v", err)
+	}
+	fmt.Printf("--- t:\n%v\n\n", c)
+
 	return nil
 }
