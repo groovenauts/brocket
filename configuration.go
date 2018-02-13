@@ -12,11 +12,11 @@ import (
 )
 
 type Configuration struct {
-	DockerfilePath string // Path to Dockerfile
-	ConfigPath     string // Path to YAML file
+	DockerfilePath string `yaml:"-"` // Path to Dockerfile
+	ConfigPath     string `yaml:"-"` // Path to YAML file
 	// From config file
-	WorkingDir string
-	ImageName  string
+	WorkingDir string `yaml:"WORKING_DIR"`
+	ImageName  string `yaml:"IMAGE_NAME"`
 }
 
 func (c *Configuration) Load() error {
@@ -43,6 +43,7 @@ func (c *Configuration) Load() error {
 			if err != nil {
 				return err
 			}
+			c.Prepare()
 		default:
 			return err
 		}
@@ -122,7 +123,11 @@ func (c *Configuration) LoadAsYaml(source []byte) error {
 	if err != nil {
 		return fmt.Errorf("Failed to yaml.Unmarshal because of %v", err)
 	}
-	fmt.Printf("--- t:\n%v\n\n", c)
-
 	return nil
+}
+
+func (c *Configuration) Prepare() {
+	if c.WorkingDir == "" {
+		c.WorkingDir = "."
+	}
 }
