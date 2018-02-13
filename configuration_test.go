@@ -57,9 +57,9 @@ func TestConfiguration(t *testing.T) {
 		Ptn{7, ":dockerfilePath not found", "no_dockerfile_case2", "", "./sub/brocket1.yaml"},
 		Ptn{8, ":dockerfilePath not found", "no_dockerfile_case2", "./app1/Dockerfile-prod", "./sub/brocket1.yaml"},
 		Ptn{9, ":dockerfilePath has no configuration", "dockerfile_without_config0", "", ""},
-		Ptn{10, ":dockerfilePath has no configuration", "dockerfile_without_config0", "", "./sub/brocket1.yaml"},
+		Ptn{10, ":configPath not found", "dockerfile_without_config0", "", "./sub/brocket1.yaml"},
 		Ptn{11, ":dockerfilePath has no configuration", "dockerfile_without_config1", "./app1/Dockerfile-prod", ""},
-		Ptn{12, ":dockerfilePath has no configuration", "dockerfile_without_config1", "./app1/Dockerfile-prod", "./sub/brocket1.yaml"},
+		Ptn{12, ":configPath not found", "dockerfile_without_config1", "./app1/Dockerfile-prod", "./sub/brocket1.yaml"},
 		Ptn{13, ":configPath not found", "dockerfile_with_config0", "", "./sub/brocket1.yaml"},
 		Ptn{16, ":configPath not found", "dockerfile_with_config2", "./app1/Dockerfile-prod", "./sub/brocket1.yaml"},
 	}
