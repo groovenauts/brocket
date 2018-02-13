@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 )
 
@@ -16,13 +18,29 @@ type Configuration struct {
 }
 
 func (c *Configuration) Load() error {
-	_, err := c.FilepathWithCheck(c.DockerfilePath, "Dockerfile")
+	dockerfilePath, err := c.FilepathWithCheck(c.DockerfilePath, "Dockerfile")
 	if err != nil {
 		return err
 	}
-	_, err = c.FilepathWithCheck(c.ConfigPath, "brocket.yml", "brocket.yaml")
+	configSource, err := c.ExtractConfigSource(dockerfilePath)
 	if err != nil {
 		return err
+	}
+
+	_, err = c.FilepathWithCheck(c.ConfigPath, "brocket.yml", "brocket.yaml")
+	if err != nil {
+		switch err.(type) {
+		case *FileNotFound:
+			if configSource == "" {
+				return fmt.Errorf("%s has no configuration", dockerfilePath)
+			}
+			err := c.LoadAsYaml([]byte(configSource))
+			if err != nil {
+				return err
+			}
+		default:
+			return err
+		}
 	}
 	return nil
 }
@@ -71,4 +89,29 @@ func (c *Configuration) FileExist(path string) (bool, error) {
 		return false, err
 	}
 	return true, err
+}
+
+var ConfigLinePattern = regexp.MustCompile(`\A\#\s*\[config\]\s?`)
+
+func (c *Configuration) ExtractConfigSource(path string) (string, error) {
+	bytes, err := ioutil.ReadFile(path)
+	if err != nil {
+		log.Errorf("Failed to ioutil.ReadFile(%q) because of %v\n", path, err)
+		return "", err
+	}
+	result := []string{}
+	lines := strings.Split(string(bytes), "\n")
+	for _, line := range lines {
+		if ConfigLinePattern.MatchString(line) {
+			line := ConfigLinePattern.ReplaceAllString(line, "")
+			if line != "" {
+				result = append(result, strings.TrimSpace(line))
+			}
+		}
+	}
+	return strings.Join(result, "\n"), nil
+}
+
+func (c *Configuration) LoadAsYaml(source []byte) error {
+	return nil
 }
