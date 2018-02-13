@@ -32,3 +32,7 @@
 [[constraint]]
   name = "github.com/urfave/cli"
   version = "v1.20.0"
+
+[[constraint]]
+  name = "github.com/sirupsen/logrus"
+  version = "~v1.0.4"
