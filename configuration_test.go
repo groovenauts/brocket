@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -39,35 +40,36 @@ func TestConfiguration(t *testing.T) {
 	dockerfilePathPtn := regexp.MustCompile(`:dockerfilePath`)
 
 	type Ptn struct {
+		No         int
 		ErrFormat  string
 		Dir        string
 		Dockerfile string
 		ConfigPath string
 	}
 	patterns := []Ptn{
-		Ptn{":dockerfilePath not found", "no_dockerfile_case0", "", ""},
-		Ptn{":dockerfilePath not found", "no_dockerfile_case0", "", "./sub/brocket1.yaml"},
-		Ptn{":dockerfilePath not found", "no_dockerfile_case0", "./app1/Dockerfile-prod", ""},
-		Ptn{":dockerfilePath not found", "no_dockerfile_case0", "./app1/Dockerfile-prod", "./sub/brocket1.yaml"},
-		Ptn{":dockerfilePath not found", "no_dockerfile_case1", "", ""},
-		Ptn{":dockerfilePath not found", "no_dockerfile_case1", "./app1/Dockerfile-prod", ""},
-		Ptn{":dockerfilePath not found", "no_dockerfile_case2", "", "./sub/brocket1.yaml"},
-		Ptn{":dockerfilePath not found", "no_dockerfile_case2", "./app1/Dockerfile-prod", "./sub/brocket1.yaml"},
-		Ptn{":dockerfilePath has no configuration", "dockerfile_without_config0", "", ""},
-		Ptn{":dockerfilePath has no configuration", "dockerfile_without_config0", "", "./sub/brocket1.yaml"},
-		Ptn{":dockerfilePath has no configuration", "dockerfile_without_config1", "./app1/Dockerfile-prod", ""},
-		Ptn{":dockerfilePath has no configuration", "dockerfile_without_config1", "./app1/Dockerfile-prod", "./sub/brocket1.yaml"},
+		Ptn{1, ":dockerfilePath not found", "no_dockerfile_case0", "", ""},
+		Ptn{2, ":dockerfilePath not found", "no_dockerfile_case0", "", "./sub/brocket1.yaml"},
+		Ptn{3, ":dockerfilePath not found", "no_dockerfile_case0", "./app1/Dockerfile-prod", ""},
+		Ptn{4, ":dockerfilePath not found", "no_dockerfile_case0", "./app1/Dockerfile-prod", "./sub/brocket1.yaml"},
+		Ptn{5, ":dockerfilePath not found", "no_dockerfile_case1", "", ""},
+		Ptn{6, ":dockerfilePath not found", "no_dockerfile_case1", "./app1/Dockerfile-prod", ""},
+		Ptn{7, ":dockerfilePath not found", "no_dockerfile_case2", "", "./sub/brocket1.yaml"},
+		Ptn{8, ":dockerfilePath not found", "no_dockerfile_case2", "./app1/Dockerfile-prod", "./sub/brocket1.yaml"},
+		Ptn{9, ":dockerfilePath has no configuration", "dockerfile_without_config0", "", ""},
+		Ptn{10, ":dockerfilePath has no configuration", "dockerfile_without_config0", "", "./sub/brocket1.yaml"},
+		Ptn{11, ":dockerfilePath has no configuration", "dockerfile_without_config1", "./app1/Dockerfile-prod", ""},
+		Ptn{12, ":dockerfilePath has no configuration", "dockerfile_without_config1", "./app1/Dockerfile-prod", "./sub/brocket1.yaml"},
 	}
 	for _, ptn := range patterns {
 		loadConfigurationAt(t, ptn.Dir, ptn.Dockerfile, ptn.ConfigPath, func(c *Configuration, err error) {
-			if assert.Error(t, err) {
+			if assert.Error(t, err, fmt.Sprintf("%v", ptn)) {
 				dockerfileName := ptn.Dockerfile
 				if dockerfileName == "" {
 					dockerfileName = "Dockerfile"
 				}
 				dockerfilePath := filepath.Join(basePath, ptn.Dir, dockerfileName)
 				msg := dockerfilePathPtn.ReplaceAllString(ptn.ErrFormat, dockerfilePath)
-				assert.Equal(t, msg, err.Error())
+				assert.Equal(t, msg, err.Error(), fmt.Sprintf("%v", ptn))
 			}
 		})
 	}
