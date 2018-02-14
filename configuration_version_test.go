@@ -13,5 +13,10 @@ func TestConfigurationVersion(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, "0.1.2", version)
 	})
+	loadConfigurationAt(t, "configuration_version_test/dockerfile_with_config", "", "", func(c *Configuration, e error) {
+		assert.NoError(t, e)
+		version, err := c.GetVersion()
+		assert.NoError(t, err)
+		assert.Equal(t, "0.2.3", version)
 	})
 }
