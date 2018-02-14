@@ -9,14 +9,6 @@ import (
 	"github.com/urfave/cli"
 )
 
-var (
-	UseSudoForDockerFlag = cli.StringFlag{
-		Name:  "use-sudo-for-docker,S",
-		Usage: "Set to log your configuration loaded",
-		Value: "auto",
-	}
-)
-
 func (b *Command) BuildCommand() cli.Command {
 	return cli.Command{
 		Name:   "build",
@@ -34,23 +26,6 @@ func (b *Command) Build(c *cli.Context) error {
 	return b.LoadConfiguration(c, func(config *Configuration) error {
 		return config.BuildDockerImage(b.useSudo(c))
 	})
-}
-
-func (b *Command) PushCommand() cli.Command {
-	return cli.Command{
-		Name:   "push",
-		Usage:  "Push docker image to registry",
-		Action: b.Push,
-		Flags: []cli.Flag{
-			ConfigPathFlag,
-			DockerfileFlag,
-			UseSudoForDockerFlag,
-		},
-	}
-}
-
-func (b *Command) Push(c *cli.Context) error {
-	return nil
 }
 
 func (b *Command) useSudo(c *cli.Context) bool {
