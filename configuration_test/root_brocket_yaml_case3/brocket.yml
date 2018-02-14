@@ -1,2 +1,2 @@
 IMAGE_NAME: "groovenauts/rails-example"
-WORKING_DIR: ".."
+WORKING_DIR: "."
