@@ -1,0 +1,6 @@
+IMAGE_NAME: "groovenauts/rails-example"
+VERSION_FILE: "./VERSION"
+DOCKER_PUSH_COMMAND: "gcloud docker -- push"
+DOCKER_PUSH_REGISTRY: "asia.gcr.io"
+DOCKER_PUSH_USERNAME: "groovenauts-production"
+DOCKER_PUSH_EXTRA_TAG: "latest"
