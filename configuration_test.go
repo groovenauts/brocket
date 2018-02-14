@@ -41,6 +41,9 @@ func TestConfiguration(t *testing.T) {
 		Ptn{12, ":configPath not found", "dockerfile_without_config1", "./app1/Dockerfile-prod", "./sub/brocket1.yaml", ""},
 		Ptn{13, ":configPath not found", "dockerfile_with_config0", "", "./sub/brocket1.yaml", ""},
 		Ptn{16, ":configPath not found", "dockerfile_with_config2", "./app1/Dockerfile-prod", "./sub/brocket1.yaml", ""},
+		Ptn{30, ":dockerfilePath not found", "sub_brocket_yaml_case5", "./invalid/Dockerfile-prod", "./sub/brocket1.yaml", "sub"},
+		Ptn{30, ":configPath not found", "sub_brocket_yaml_case5", "./app1/Dockerfile-prod", "./invalid/brocket1.yaml", "sub"},
+		Ptn{30, ":dockerfilePath not found", "sub_brocket_yaml_case5", "./invalid/Dockerfile-prod", "./invalid/brocket1.yaml", "sub"},
 	}
 	for _, ptn := range patterns {
 		loadConfigurationAt(t, "configuration_test/"+ptn.Dir, ptn.Dockerfile, ptn.ConfigPath, func(c *Configuration, err error) {
