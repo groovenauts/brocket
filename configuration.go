@@ -26,6 +26,11 @@ type Configuration struct {
 	AfterBuildScript      interface{} `yaml:"AFTER_BUILD,omitempty"`
 	OnBuildCompleteScript interface{} `yaml:"ON_BUILD_COMPLETE,omitempty"`
 	OnBuildErrorScript    interface{} `yaml:"ON_BUILD_ERROR,omitempty"`
+	// Docker push config
+	DockerPushCommand string `yaml:"DOCKER_PUSH_COMMAND,omitempty"`
+	DockerRegistry    string `yaml:"DOCKER_PUSH_REGISTRY,omitempty"`
+	DockerUsername    string `yaml:"DOCKER_PUSH_USERNAME,omitempty"`
+	DockerExtraTag    string `yaml:"DOCKER_PUSH_EXTRA_TAG,omitempty"`
 	// Version
 	VersionFile   string `yaml:"VERSION_FILE,omitempty"`
 	VersionScript string `yaml:"VERSION_SCRIPT,omitempty"`
@@ -166,6 +171,9 @@ func (c *Configuration) Prepare() {
 		c.WorkingDir = c.BaseDir
 	} else {
 		c.WorkingDir = filepath.Join(c.BaseDir, c.WorkingDir)
+	}
+	if c.DockerPushCommand == "" {
+		c.DockerPushCommand = "docker push"
 	}
 }
 
