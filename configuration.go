@@ -18,6 +18,9 @@ type Configuration struct {
 	// From config file
 	WorkingDir string `yaml:"WORKING_DIR"`
 	ImageName  string `yaml:"IMAGE_NAME"`
+	// Version
+	VersionFile   string `yaml:"VERSION_FILE"`
+	VersionScript string `yaml:"VERSION_SCRIPT"`
 }
 
 func (c *Configuration) Load() error {
@@ -111,7 +114,7 @@ func (c *Configuration) FileExist(path string) (bool, error) {
 		log.Errorf("Failed to os.Stat(%q) because of %v\n", path, err)
 		return false, err
 	}
-	return true, err
+	return true, nil
 }
 
 var ConfigLinePattern = regexp.MustCompile(`\A\#\s*\[config\]\s?`)
@@ -128,7 +131,7 @@ func (c *Configuration) ExtractConfigSource(path string) (string, error) {
 		if ConfigLinePattern.MatchString(line) {
 			line := ConfigLinePattern.ReplaceAllString(line, "")
 			if line != "" {
-				result = append(result, strings.TrimSpace(line))
+				result = append(result, line)
 			}
 		}
 	}
@@ -149,4 +152,19 @@ func (c *Configuration) Prepare() {
 	} else {
 		c.WorkingDir = filepath.Join(c.BaseDir, c.WorkingDir)
 	}
+}
+
+func (c *Configuration) Chdir(f func() error) error {
+	cwd, err := os.Getwd()
+	if err != nil {
+		return err
+	}
+	defer func() {
+		os.Chdir(cwd)
+	}()
+	err = os.Chdir(c.WorkingDir)
+	if err != nil {
+		return err
+	}
+	return f()
 }
