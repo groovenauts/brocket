@@ -34,7 +34,6 @@ func (c *Configuration) Load() error {
 	}
 
 	configPath, err := c.FilepathWithCheck(c.ConfigPath, "brocket.yml", "brocket.yaml")
-	fmt.Printf("c.FilepathWithCheck(%v, %v, %v) => (%v, %v) \n", c.ConfigPath, "brocket.yml", "brocket.yaml", configPath, err)
 	if err != nil {
 		switch err.(type) {
 		case *FileNotFound:
