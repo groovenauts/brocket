@@ -30,6 +30,11 @@ func (c *Configuration) Load() error {
 	var err error
 	c.AbsDockerfilePath, err = c.FilepathWithCheck(c.DockerfilePath, "Dockerfile")
 	if err != nil {
+		f := c.DockerfilePath
+		if f == "" {
+			f = "Dockerfile"
+		}
+		log.Errorf("Dockerfile not found: %s\n", f)
 		return err
 	}
 	configSource, err := c.ExtractConfigSource(c.AbsDockerfilePath)
