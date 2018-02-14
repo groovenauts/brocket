@@ -26,19 +26,16 @@ func (c *Configuration) GetVersionFromScript() (string, error) {
 
 func (c *Configuration) GetVersionFromFile() (string, error) {
 	var result string
-	err := c.Chdir(func() error {
-		f, err := c.FilepathWithCheck(c.VersionFile, "VERSION")
-		if err != nil {
-			return err
-		}
-		bytes, err := ioutil.ReadFile(f)
-		if err != nil {
-			log.Errorf("Failed to ioutil.ReadFile(%q) because of %v\n", f, err)
-			return err
-		}
-		result = strings.TrimSpace(string(bytes))
-		return nil
-	})
+	f, err := c.FilepathWithCheck(c.VersionFile, "VERSION")
+	if err != nil {
+		return "", err
+	}
+	bytes, err := ioutil.ReadFile(f)
+	if err != nil {
+		log.Errorf("Failed to ioutil.ReadFile(%q) because of %v\n", f, err)
+		return "", err
+	}
+	result = strings.TrimSpace(string(bytes))
 	if err != nil {
 		return "", err
 	}
