@@ -87,14 +87,31 @@ func TestConfiguration(t *testing.T) {
 	}
 
 	patterns = []Ptn{
-		Ptn{14, ":configPath not found", "dockerfile_with_config0", "", "", "."},
-		Ptn{15, ":configPath not found", "dockerfile_with_config1", "", "", "build"},
+		Ptn{14, "", "dockerfile_with_config0", "", "", "."},
+		Ptn{15, "", "dockerfile_with_config1", "", "", "build"},
+		Ptn{17, "", "dockerfile_with_config2", "./app1/Dockerfile-prod", "", "app1"},
+		Ptn{18, "", "dockerfile_with_config3", "./app1/Dockerfile-prod", "", "."},
+		Ptn{19, "", "root_brocket_yaml_case0", "", "", "."},
+		Ptn{20, "", "root_brocket_yaml_case1", "", "", "build"},
+		Ptn{21, "", "root_brocket_yaml_case2", "", "", "."},
+		Ptn{22, "", "root_brocket_yaml_case3", "./app1/Dockerfile-prod", "", "."},
+		Ptn{23, "", "root_brocket_yaml_case4", "./app1/Dockerfile-prod", "", "app1"},
+		Ptn{24, "", "root_brocket_yaml_case5", "./app1/Dockerfile-prod", "", "."},
+		Ptn{25, "", "sub_brocket_yaml_case0", "", "./sub/brocket1.yaml", "sub"},
+		Ptn{26, "", "sub_brocket_yaml_case1", "", "./sub/brocket1.yaml", "."},
+		Ptn{27, "", "sub_brocket_yaml_case2", "", "./sub/brocket1.yaml", "sub"},
+		Ptn{28, "", "sub_brocket_yaml_case3", "./app1/Dockerfile-prod", "./sub/brocket1.yaml", "sub"},
+		Ptn{29, "", "sub_brocket_yaml_case4", "./app1/Dockerfile-prod", "./sub/brocket1.yaml", "app1"},
+		Ptn{30, "", "sub_brocket_yaml_case5", "./app1/Dockerfile-prod", "./sub/brocket1.yaml", "sub"},
 	}
 	for _, ptn := range patterns {
+		fmt.Printf("test case: %v\n", ptn)
 		loadConfigurationAt(t, ptn.Dir, ptn.Dockerfile, ptn.ConfigPath, func(c *Configuration, err error) {
 			if assert.NoError(t, err, fmt.Sprintf("%v", ptn)) {
-				assert.Equal(t, "groovenauts/rails-example", c.ImageName)
-				assert.Equal(t, ptn.WorkingDir, c.WorkingDir)
+				assert.Equal(t, "groovenauts/rails-example", c.ImageName, fmt.Sprintf("%v", ptn))
+				wd, err := filepath.Abs(ptn.WorkingDir)
+				assert.NoError(t, err)
+				assert.Equal(t, wd, c.WorkingDir, fmt.Sprintf("%v", ptn))
 			}
 		})
 	}

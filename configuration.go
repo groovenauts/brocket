@@ -14,6 +14,7 @@ import (
 type Configuration struct {
 	DockerfilePath string `yaml:"-"` // Path to Dockerfile
 	ConfigPath     string `yaml:"-"` // Path to YAML file
+	BaseDir        string `yaml:"-"`
 	// From config file
 	WorkingDir string `yaml:"WORKING_DIR"`
 	ImageName  string `yaml:"IMAGE_NAME"`
@@ -29,7 +30,8 @@ func (c *Configuration) Load() error {
 		return err
 	}
 
-	_, err = c.FilepathWithCheck(c.ConfigPath, "brocket.yml", "brocket.yaml")
+	configPath, err := c.FilepathWithCheck(c.ConfigPath, "brocket.yml", "brocket.yaml")
+	fmt.Printf("c.FilepathWithCheck(%v, %v, %v) => (%v, %v) \n", c.ConfigPath, "brocket.yml", "brocket.yaml", configPath, err)
 	if err != nil {
 		switch err.(type) {
 		case *FileNotFound:
@@ -39,15 +41,30 @@ func (c *Configuration) Load() error {
 			if configSource == "" {
 				return fmt.Errorf("%s has no configuration", dockerfilePath)
 			}
+			c.BaseDir = filepath.Dir(dockerfilePath)
 			err := c.LoadAsYaml([]byte(configSource))
 			if err != nil {
 				return err
 			}
 			c.Prepare()
+			return nil
 		default:
 			return err
 		}
 	}
+
+	c.BaseDir = filepath.Dir(configPath)
+	bytes, err := ioutil.ReadFile(configPath)
+	if err != nil {
+		log.Errorf("Failed to ioutil.ReadFile(%q) because of %v\n", configPath, err)
+		return err
+	}
+	err = c.LoadAsYaml(bytes)
+	if err != nil {
+		return err
+	}
+	c.Prepare()
+
 	return nil
 }
 
@@ -128,6 +145,8 @@ func (c *Configuration) LoadAsYaml(source []byte) error {
 
 func (c *Configuration) Prepare() {
 	if c.WorkingDir == "" {
-		c.WorkingDir = "."
+		c.WorkingDir = c.BaseDir
+	} else {
+		c.WorkingDir = filepath.Join(c.BaseDir, c.WorkingDir)
 	}
 }
