@@ -17,6 +17,7 @@ func newApp() *cli.App {
 	app.Commands = []cli.Command{
 		cmd.BuildCommand(),
 		cmd.PushCommand(),
+		cmd.VersionCommand(),
 	}
 
 	return app
