@@ -21,9 +21,14 @@ type Configuration struct {
 	WorkingDir string `yaml:"WORKING_DIR"`
 	// Docker
 	ImageName string `yaml:"IMAGE_NAME"`
+	// Docker bulid callbacks
+	BeforeBuildScript     interface{} `yaml:"BEFORE_BUILD,omitempty"`
+	AfterBuildScript      interface{} `yaml:"AFTER_BUILD,omitempty"`
+	OnBuildCompleteScript interface{} `yaml:"ON_BUILD_COMPLETE,omitempty"`
+	OnBuildErrorScript    interface{} `yaml:"ON_BUILD_ERROR,omitempty"`
 	// Version
-	VersionFile   string `yaml:"VERSION_FILE"`
-	VersionScript string `yaml:"VERSION_SCRIPT"`
+	VersionFile   string `yaml:"VERSION_FILE,omitempty"`
+	VersionScript string `yaml:"VERSION_SCRIPT,omitempty"`
 }
 
 func (c *Configuration) Load() error {

@@ -70,15 +70,23 @@ func (c *Configuration) BuildDockerImage(useSudo bool) error {
 	log.Infof("[docker build] starting")
 	command, err := c.BuildDockerBuildCommand(useSudo)
 	if err != nil {
+		log.Errorf("Failed to build command because of %v\n", err)
 		return err
 	}
-	cmd := exec.Command(command[0], command[1:]...)
-	cmd.Dir = c.WorkingDir
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	err = cmd.Run()
+	err = c.WrapWithCallbacks(func() error {
+		log.Infof("[docker build] building")
+		cmd := exec.Command(command[0], command[1:]...)
+		cmd.Dir = c.WorkingDir
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		err = cmd.Run()
+		if err != nil {
+			log.Errorf("Failed to run %v because of %v\n", command, err)
+			return err
+		}
+		return nil
+	})
 	if err != nil {
-		log.Errorf("Failed to run %v because of %v\n", command, err)
 		return err
 	}
 	log.Infof("[docker build] OK")
@@ -106,4 +114,74 @@ func (c *Configuration) BuildDockerBuildCommand(useSudo bool) ([]string, error) 
 		cmd = append([]string{"sudo"}, cmd...)
 	}
 	return cmd, nil
+}
+
+func (c *Configuration) WrapWithCallbacks(f func() error) error {
+	log.Debugf("WrapWithCallbacks %v\n", 1)
+	err := c.ExecBuildCallbacks(c.BeforeBuildScript)
+	if err != nil {
+		log.Errorf("Failed to run BeforeBuildScript because of %v\n", err)
+		return err
+	}
+
+	log.Debugf("WrapWithCallbacks %v\n", 2)
+	defer c.ExecBuildCallbacks(c.AfterBuildScript)
+
+	err = f()
+	if err != nil {
+		// Ignore error from OnBuildErrorScript
+		c.ExecBuildCallbacks(c.OnBuildErrorScript)
+		return err
+	}
+	log.Debugf("WrapWithCallbacks %v\n", 3)
+
+	err = c.ExecBuildCallbacks(c.OnBuildCompleteScript)
+	if err != nil {
+		log.Errorf("Failed to run OnBuildCompleteScript because of %v\n", err)
+		return err
+	}
+	log.Debugf("WrapWithCallbacks %v\n", 4)
+
+	return nil
+}
+
+func (c *Configuration) ExecBuildCallbacks(cb interface{}) error {
+	log.Debugf("ExecBuildCallbacks %v\n", cb)
+	if cb == nil {
+		return nil
+	}
+	switch cb.(type) {
+	case string:
+		if cb.(string) == "" {
+			return nil
+		}
+		cmd := exec.Command("sh", "-c", cb.(string))
+		cmd.Dir = c.WorkingDir
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		err := cmd.Run()
+		if err != nil {
+			log.Errorf("Failed to run %v because of %v\n", cb, err)
+			return err
+		}
+		return nil
+	case []string:
+		for _, s := range cb.([]string) {
+			err := c.ExecBuildCallbacks(s)
+			if err != nil {
+				return err
+			}
+		}
+		return nil
+	case []interface{}:
+		for _, s := range cb.([]interface{}) {
+			err := c.ExecBuildCallbacks(s)
+			if err != nil {
+				return err
+			}
+		}
+		return nil
+	default:
+		return fmt.Errorf("Unsupported callback type [%T] %v", cb, cb)
+	}
 }
