@@ -12,23 +12,27 @@ import (
 )
 
 type Configuration struct {
-	DockerfilePath string `yaml:"-"` // Path to Dockerfile
-	ConfigPath     string `yaml:"-"` // Path to YAML file
-	BaseDir        string `yaml:"-"`
-	// From config file
+	DockerfilePath    string `yaml:"-"` // Path to Dockerfile
+	ConfigPath        string `yaml:"-"` // Path to YAML file
+	BaseDir           string `yaml:"-"`
+	FilePath          string `yaml:"-"`
+	AbsDockerfilePath string `yaml:"-"`
+	// Common
 	WorkingDir string `yaml:"WORKING_DIR"`
-	ImageName  string `yaml:"IMAGE_NAME"`
+	// Docker
+	ImageName string `yaml:"IMAGE_NAME"`
 	// Version
 	VersionFile   string `yaml:"VERSION_FILE"`
 	VersionScript string `yaml:"VERSION_SCRIPT"`
 }
 
 func (c *Configuration) Load() error {
-	dockerfilePath, err := c.FilepathWithCheck(c.DockerfilePath, "Dockerfile")
+	var err error
+	c.AbsDockerfilePath, err = c.FilepathWithCheck(c.DockerfilePath, "Dockerfile")
 	if err != nil {
 		return err
 	}
-	configSource, err := c.ExtractConfigSource(dockerfilePath)
+	configSource, err := c.ExtractConfigSource(c.AbsDockerfilePath)
 	if err != nil {
 		return err
 	}
@@ -41,9 +45,10 @@ func (c *Configuration) Load() error {
 				return err
 			}
 			if configSource == "" {
-				return fmt.Errorf("%s has no configuration", dockerfilePath)
+				return fmt.Errorf("%s has no configuration", c.AbsDockerfilePath)
 			}
-			c.BaseDir = filepath.Dir(dockerfilePath)
+			c.FilePath = c.AbsDockerfilePath
+			c.BaseDir = filepath.Dir(c.AbsDockerfilePath)
 			err := c.LoadAsYaml([]byte(configSource))
 			if err != nil {
 				return err
@@ -55,6 +60,7 @@ func (c *Configuration) Load() error {
 		}
 	}
 
+	c.FilePath = configPath
 	c.BaseDir = filepath.Dir(configPath)
 	bytes, err := ioutil.ReadFile(configPath)
 	if err != nil {
