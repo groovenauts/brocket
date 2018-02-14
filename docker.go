@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"os/exec"
 	"path/filepath"
 
@@ -31,7 +32,7 @@ func (b *Command) BuildCommand() cli.Command {
 
 func (b *Command) Build(c *cli.Context) error {
 	return b.LoadConfiguration(c, func(config *Configuration) error {
-		return nil
+		return config.BuildDockerImage(b.useSudo(c))
 	})
 }
 
@@ -63,6 +64,25 @@ func (b *Command) useSudo(c *cli.Context) bool {
 	default:
 		return false
 	}
+}
+
+func (c *Configuration) BuildDockerImage(useSudo bool) error {
+	log.Infof("[docker build] starting")
+	command, err := c.BuildDockerBuildCommand(useSudo)
+	if err != nil {
+		return err
+	}
+	cmd := exec.Command(command[0], command[1:]...)
+	cmd.Dir = c.WorkingDir
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	err = cmd.Run()
+	if err != nil {
+		log.Errorf("Failed to run %v because of %v\n", command, err)
+		return err
+	}
+	log.Infof("[docker build] OK")
+	return nil
 }
 
 func (c *Configuration) BuildDockerBuildCommand(useSudo bool) ([]string, error) {
