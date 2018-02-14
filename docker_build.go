@@ -76,7 +76,8 @@ func (c *Configuration) BuildDockerBuildCommand(useSudo bool) ([]string, error) 
 	if err != nil {
 		return nil, err
 	}
-	cmd := []string{"docker", "build", "-t", c.ImageName + ":" + version}
+	base := c.CommandBase(useSudo)
+	cmd := append(base, "docker", "build", "-t", c.ImageName+":"+version)
 	rel, err := filepath.Rel(c.WorkingDir, c.AbsDockerfilePath)
 	if err != nil {
 		return nil, fmt.Errorf("Failed to get filepath.Rel(%q, %q) because of %v", c.WorkingDir, c.AbsDockerfilePath, err)
@@ -85,9 +86,6 @@ func (c *Configuration) BuildDockerBuildCommand(useSudo bool) ([]string, error) 
 		cmd = append(cmd, "-f", rel)
 	}
 	cmd = append(cmd, ".")
-	if useSudo {
-		cmd = append([]string{"sudo"}, cmd...)
-	}
 	return cmd, nil
 }
 
