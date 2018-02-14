@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 	"os/exec"
 	"strings"
@@ -28,16 +27,13 @@ func (c *Configuration) GetVersionFromScript() (string, error) {
 func (c *Configuration) GetVersionFromFile() (string, error) {
 	var result string
 	err := c.Chdir(func() error {
-		existance, err := c.FileExist(c.VersionFile)
+		f, err := c.FilepathWithCheck(c.VersionFile, "VERSION")
 		if err != nil {
 			return err
 		}
-		if !existance {
-			return fmt.Errorf("File not found: %q at %q", c.VersionFile, c.WorkingDir)
-		}
-		bytes, err := ioutil.ReadFile(c.VersionFile)
+		bytes, err := ioutil.ReadFile(f)
 		if err != nil {
-			log.Errorf("Failed to ioutil.ReadFile(%q) because of %v\n", c.VersionFile, err)
+			log.Errorf("Failed to ioutil.ReadFile(%q) because of %v\n", f, err)
 			return err
 		}
 		result = strings.TrimSpace(string(bytes))
