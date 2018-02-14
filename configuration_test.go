@@ -2,33 +2,12 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"path/filepath"
 	"regexp"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
-
-func chdir(t *testing.T, dir string, f func()) {
-	cwd, err := os.Getwd()
-	assert.NoError(t, err)
-	defer func() {
-		assert.NoError(t, os.Chdir(cwd))
-	}()
-	assert.NoError(t, os.Chdir("configuration_test/"+dir))
-	f()
-}
-
-func loadConfigurationAt(t *testing.T, dir, dockerfile, configPath string, assertions func(*Configuration, error)) {
-	chdir(t, dir, func() {
-		config := &Configuration{
-			ConfigPath:     configPath,
-			DockerfilePath: dockerfile,
-		}
-		assertions(config, config.Load())
-	})
-}
 
 var RuntimeGopathPattern = regexp.MustCompile(".gopath~/src/brocket/")
 
@@ -39,7 +18,6 @@ func TestConfiguration(t *testing.T) {
 
 	dockerfilePathPtn := regexp.MustCompile(`:dockerfilePath`)
 	configPathPtn := regexp.MustCompile(`:configPath`)
-
 	type Ptn struct {
 		No         int
 		ErrFormat  string
@@ -65,7 +43,7 @@ func TestConfiguration(t *testing.T) {
 		Ptn{16, ":configPath not found", "dockerfile_with_config2", "./app1/Dockerfile-prod", "./sub/brocket1.yaml", ""},
 	}
 	for _, ptn := range patterns {
-		loadConfigurationAt(t, ptn.Dir, ptn.Dockerfile, ptn.ConfigPath, func(c *Configuration, err error) {
+		loadConfigurationAt(t, "configuration_test/"+ptn.Dir, ptn.Dockerfile, ptn.ConfigPath, func(c *Configuration, err error) {
 			if assert.Error(t, err, fmt.Sprintf("%v", ptn)) {
 				dockerfileName := ptn.Dockerfile
 				if dockerfileName == "" {
@@ -106,7 +84,7 @@ func TestConfiguration(t *testing.T) {
 	}
 	for _, ptn := range patterns {
 		fmt.Printf("test case: %v\n", ptn)
-		loadConfigurationAt(t, ptn.Dir, ptn.Dockerfile, ptn.ConfigPath, func(c *Configuration, err error) {
+		loadConfigurationAt(t, "configuration_test/"+ptn.Dir, ptn.Dockerfile, ptn.ConfigPath, func(c *Configuration, err error) {
 			if assert.NoError(t, err, fmt.Sprintf("%v", ptn)) {
 				assert.Equal(t, "groovenauts/rails-example", c.ImageName, fmt.Sprintf("%v", ptn))
 				wd, err := filepath.Abs(ptn.WorkingDir)
