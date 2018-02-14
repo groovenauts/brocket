@@ -40,12 +40,7 @@ func (c *Configuration) BuildDockerPushCommand(useSudo bool) ([][]string, error)
 		remoteNameExtra = remoteName + ":" + c.DockerExtraTag
 	}
 	r := [][]string{}
-	var base []string
-	if useSudo {
-		base = []string{"sudo"}
-	} else {
-		base = []string{}
-	}
+	base := c.CommandBase(useSudo)
 	if c.DockerRegistry != "" || c.DockerRegistry != "" {
 		r = append(r, append(base, "docker", "tag", localNameVer, remoteNameVer))
 		if remoteNameExtra != "" {

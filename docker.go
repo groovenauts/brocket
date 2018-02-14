@@ -11,3 +11,11 @@ var (
 		Value: "auto",
 	}
 )
+
+func (c *Configuration) CommandBase(useSudo bool) []string {
+	if useSudo {
+		return []string{"sudo"}
+	} else {
+		return []string{}
+	}
+}
