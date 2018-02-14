@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"os/exec"
 	"strings"
 )
 
@@ -15,7 +16,13 @@ func (c *Configuration) GetVersion() (string, error) {
 }
 
 func (c *Configuration) GetVersionFromScript() (string, error) {
-	return "", nil
+	cmd := exec.Command("sh", "-c", c.VersionScript)
+	cmd.Dir = c.WorkingDir
+	out, err := cmd.Output()
+	if err != nil {
+		return "", err
+	}
+	return strings.TrimSpace(string(out)), nil
 }
 
 func (c *Configuration) GetVersionFromFile() (string, error) {
