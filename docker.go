@@ -38,8 +38,22 @@ func (b *Docker) BuildCommand() cli.Command {
 	}
 }
 
+func (b *Docker) LoadConfiguration(c *cli.Context, f func(*Configuration) error) error {
+	config := &Configuration{
+		DockerfilePath: c.String("dockerfile"),
+		ConfigPath:     c.String("config"),
+	}
+	err := config.Load()
+	if err != nil {
+		return err
+	}
+	return f(config)
+}
+
 func (b *Docker) Build(c *cli.Context) error {
-	return nil
+	return b.LoadConfiguration(c, func(config *Configuration) error {
+		return nil
+	})
 }
 
 func (b *Docker) PushCommand() cli.Command {
