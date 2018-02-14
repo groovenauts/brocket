@@ -7,6 +7,8 @@ import (
 )
 
 func newApp() *cli.App {
+	InitLog()
+
 	app := cli.NewApp()
 	app.Name = "brocket"
 	app.Usage = "github.com/groovenauts/brocket"
