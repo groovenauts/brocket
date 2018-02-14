@@ -1,6 +1,8 @@
 package main
 
 import (
+	"gopkg.in/yaml.v2"
+
 	"github.com/urfave/cli"
 )
 
@@ -25,9 +27,14 @@ func (b *Command) LoadConfiguration(c *cli.Context, f func(*Configuration) error
 		DockerfilePath: c.String("dockerfile"),
 		ConfigPath:     c.String("config"),
 	}
+	log.Debugf("Configuration loading %v\n", config)
 	err := config.Load()
 	if err != nil {
 		return err
+	}
+	yaml, err := yaml.Marshal(config)
+	if err == nil {
+		log.Debugf("Configuration loaded\n%s\n", string(yaml))
 	}
 	return f(config)
 }
