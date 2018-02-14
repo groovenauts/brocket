@@ -4,6 +4,14 @@ import (
 	"github.com/urfave/cli"
 )
 
+var (
+	UseSudoForDockerFlag = cli.StringFlag{
+		Name:  "use-sudo-for-docker,S",
+		Usage: "Set to log your configuration loaded",
+		Value: "auto",
+	}
+)
+
 func (b *Command) BuildCommand() cli.Command {
 	return cli.Command{
 		Name:   "build",

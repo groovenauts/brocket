@@ -18,11 +18,6 @@ var (
 		Usage: "Dockerfile to build",
 		Value: "Dockerfile",
 	}
-
-	UseSudoForDockerFlag = cli.BoolFlag{
-		Name:  "use-sudo-for-docker,S",
-		Usage: "Set to log your configuration loaded",
-	}
 )
 
 func (b *Command) LoadConfiguration(c *cli.Context, f func(*Configuration) error) error {
