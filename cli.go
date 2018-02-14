@@ -12,11 +12,11 @@ func newApp() *cli.App {
 	app.Usage = "github.com/groovenauts/brocket"
 	app.Version = VERSION
 
-	docker := &Docker{}
+	cmd := &Command{}
 
 	app.Commands = []cli.Command{
-		docker.BuildCommand(),
-		docker.PushCommand(),
+		cmd.BuildCommand(),
+		cmd.PushCommand(),
 	}
 
 	return app

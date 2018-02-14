@@ -4,7 +4,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-type Docker struct {
+type Command struct {
 }
 
 var (
@@ -25,7 +25,7 @@ var (
 	}
 )
 
-func (b *Docker) BuildCommand() cli.Command {
+func (b *Command) BuildCommand() cli.Command {
 	return cli.Command{
 		Name:   "build",
 		Usage:  "Build docker image",
@@ -38,7 +38,7 @@ func (b *Docker) BuildCommand() cli.Command {
 	}
 }
 
-func (b *Docker) LoadConfiguration(c *cli.Context, f func(*Configuration) error) error {
+func (b *Command) LoadConfiguration(c *cli.Context, f func(*Configuration) error) error {
 	config := &Configuration{
 		DockerfilePath: c.String("dockerfile"),
 		ConfigPath:     c.String("config"),
@@ -50,13 +50,13 @@ func (b *Docker) LoadConfiguration(c *cli.Context, f func(*Configuration) error)
 	return f(config)
 }
 
-func (b *Docker) Build(c *cli.Context) error {
+func (b *Command) Build(c *cli.Context) error {
 	return b.LoadConfiguration(c, func(config *Configuration) error {
 		return nil
 	})
 }
 
-func (b *Docker) PushCommand() cli.Command {
+func (b *Command) PushCommand() cli.Command {
 	return cli.Command{
 		Name:   "push",
 		Usage:  "Push docker image to registry",
@@ -69,6 +69,6 @@ func (b *Docker) PushCommand() cli.Command {
 	}
 }
 
-func (b *Docker) Push(c *cli.Context) error {
+func (b *Command) Push(c *cli.Context) error {
 	return nil
 }
