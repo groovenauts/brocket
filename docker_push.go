@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"os/exec"
 	"strings"
 
 	"github.com/urfave/cli"
@@ -21,6 +23,31 @@ func (b *Command) PushCommand() cli.Command {
 }
 
 func (b *Command) Push(c *cli.Context) error {
+	return b.LoadConfiguration(c, func(config *Configuration) error {
+		return config.PushDockerImage(b.useSudo(c))
+	})
+}
+
+func (c *Configuration) PushDockerImage(useSudo bool) error {
+	log.Infof("[docker push] starting")
+	commands, err := c.BuildDockerPushCommand(useSudo)
+	if err != nil {
+		log.Errorf("Failed to build command because of %v\n", err)
+		return err
+	}
+	log.Infof("[docker push] executing...")
+	for _, command := range commands {
+		cmd := exec.Command(command[0], command[1:]...)
+		cmd.Dir = c.WorkingDir
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		err = cmd.Run()
+		if err != nil {
+			log.Errorf("Failed to run %v because of %v\n", command, err)
+			return err
+		}
+	}
+	log.Infof("[docker push] OK")
 	return nil
 }
 
