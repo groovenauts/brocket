@@ -34,6 +34,8 @@ type Configuration struct {
 	// Version
 	VersionFile   string `yaml:"VERSION_FILE,omitempty"`
 	VersionScript string `yaml:"VERSION_SCRIPT,omitempty"`
+	// Git
+	GitTagPrefix string `yaml:"GIT_TAG_PREFIX,omitempty"`
 }
 
 func (c *Configuration) Load() error {

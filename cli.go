@@ -20,6 +20,7 @@ func newApp() *cli.App {
 		cmd.BuildCommand(),
 		cmd.PushCommand(),
 		cmd.VersionCommand(),
+		cmd.GuardCommand(),
 	}
 
 	return app
