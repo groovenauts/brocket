@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"os/exec"
 	"path/filepath"
 	"regexp"
 	"testing"
@@ -12,6 +14,16 @@ import (
 var RuntimeGopathPattern = regexp.MustCompile(".gopath~/src/brocket/")
 
 func TestConfiguration(t *testing.T) {
+	cwd, err := os.Getwd()
+	assert.NoError(t, err)
+	fmt.Printf("CWD: %q\n", cwd)
+
+	cmd := exec.Command("find", ".")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	err = cmd.Run()
+	//assert.NoError(t, err)
+
 	basePath, err := filepath.Abs("configuration_test")
 	assert.NoError(t, err)
 	basePath = RuntimeGopathPattern.ReplaceAllString(basePath, "")
