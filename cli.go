@@ -22,6 +22,7 @@ func newApp() *cli.App {
 		cmd.VersionCommand(),
 		cmd.GuardCommand(),
 		cmd.GitPushCommand(),
+		cmd.ReleaseCommand(),
 	}
 
 	return app
