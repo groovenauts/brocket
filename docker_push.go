@@ -41,7 +41,7 @@ func (c *Configuration) PushDockerImage(useSudo bool) error {
 		cmd.Dir = c.WorkingDir
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
-		err = cmd.Run()
+		err = c.ExecRun(cmd)
 		if err != nil {
 			log.Errorf("Failed to run %v because of %v\n", command, err)
 			return err

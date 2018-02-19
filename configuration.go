@@ -36,6 +36,9 @@ type Configuration struct {
 	VersionScript string `yaml:"VERSION_SCRIPT,omitempty"`
 	// Git
 	GitTagPrefix string `yaml:"GIT_TAG_PREFIX,omitempty"`
+
+	// inner usage
+	executor Executor
 }
 
 func (c *Configuration) Load() error {

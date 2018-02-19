@@ -17,7 +17,7 @@ func (c *Configuration) GetVersion() (string, error) {
 func (c *Configuration) GetVersionFromScript() (string, error) {
 	cmd := exec.Command("sh", "-c", c.VersionScript)
 	cmd.Dir = c.WorkingDir
-	out, err := cmd.Output()
+	out, err := c.ExecOutput(cmd)
 	if err != nil {
 		log.Errorf("Failed to execute %q because of \n", c.VersionScript, err)
 		return "", err

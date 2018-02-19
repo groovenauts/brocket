@@ -60,13 +60,13 @@ func (c *Configuration) GitGuard() error {
 func (c *Configuration) IsClean() bool {
 	// `git diff --exit-code` returns 0 when there isn't any difference in woprkspace.
 	cmd := exec.Command("git", "diff", "--exit-code")
-	return cmd.Run() == nil
+	return c.ExecRun(cmd) == nil
 }
 
 func (c *Configuration) IsCommitted() bool {
 	// `git diff-index --quiet --cached HEAD` returns 0 when there isn't any difference in index.
 	cmd := exec.Command("git", "diff-index", "--quiet", "--cached", "HEAD")
-	return cmd.Run() == nil
+	return c.ExecRun(cmd) == nil
 }
 
 func (c *Configuration) GetVersionTag() (string, error) {
@@ -78,7 +78,7 @@ func (c *Configuration) GetVersionTag() (string, error) {
 }
 
 func (c *Configuration) IsAlreadyTagged(tag string) (bool, error) {
-	out, err := exec.Command("git", "tag").Output()
+	out, err := c.ExecOutput(exec.Command("git", "tag"))
 	if err != nil {
 		log.Errorf("Failed to exec.Command `git tag` because of %v\n", err)
 		return false, err
@@ -105,7 +105,7 @@ func (c *Configuration) IsSameCommitAs(tag string) (bool, error) {
 }
 
 func (c *Configuration) GetSha(obj string) (string, error) {
-	out, err := exec.Command("git", "show", obj, `--format=\"%H\"`, "--quiet").Output()
+	out, err := c.ExecOutput(exec.Command("git", "show", obj, `--format=\"%H\"`, "--quiet"))
 	if err != nil {
 		log.Errorf("Failed to execute `git show %s` because of %v\n", obj, err)
 		return "", err
