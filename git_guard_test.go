@@ -22,7 +22,7 @@ func TestConfigurationGetVersionTag(t *testing.T) {
 		}
 	})
 
-	loadConfigurationAt(t, "git_test/brocket_yaml", "", "brocket-staging.yml", func(c *Configuration, e error) {
+	loadConfigurationAt(t, "git_guard_test/brocket_yaml", "", "brocket-staging.yml", func(c *Configuration, e error) {
 		assert.NoError(t, e)
 		text, err := c.GetVersionTag()
 		if assert.NoError(t, err) {
@@ -30,7 +30,7 @@ func TestConfigurationGetVersionTag(t *testing.T) {
 		}
 	})
 
-	loadConfigurationAt(t, "git_test/brocket_yaml", "", "brocket-production.yml", func(c *Configuration, e error) {
+	loadConfigurationAt(t, "git_guard_test/brocket_yaml", "", "brocket-production.yml", func(c *Configuration, e error) {
 		assert.NoError(t, e)
 		text, err := c.GetVersionTag()
 		if assert.NoError(t, err) {
