@@ -59,15 +59,19 @@ func (c *Configuration) Load() error {
 		switch err.(type) {
 		case *FileNotFound:
 			if c.ConfigPath != "" {
+				log.Errorf("%s\n", err.Error())
 				return err
 			}
 			if configSource == "" {
-				return fmt.Errorf("%s has no configuration", c.AbsDockerfilePath)
+				err := fmt.Errorf("%s has no configuration", c.AbsDockerfilePath)
+				log.Errorf("%s\n", err.Error())
+				return err
 			}
 			c.FilePath = c.AbsDockerfilePath
 			c.BaseDir = filepath.Dir(c.AbsDockerfilePath)
 			err := c.LoadAsYaml([]byte(configSource))
 			if err != nil {
+				log.Errorf("Failed to load %s as YAML because of %v\n", configPath, err)
 				return err
 			}
 			c.Prepare()
