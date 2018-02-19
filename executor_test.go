@@ -5,11 +5,14 @@ import (
 )
 
 type TestExecutor struct {
-	Cmd   *exec.Cmd
-	Error error
+	Error  error
+	Result []byte
 }
 
 func (ex *TestExecutor) Run(cmd *exec.Cmd) error {
-	ex.Cmd = cmd
 	return ex.Error
+}
+
+func (ex *TestExecutor) Output(cmd *exec.Cmd) ([]byte, error) {
+	return ex.Result, ex.Error
 }
