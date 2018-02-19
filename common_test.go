@@ -13,7 +13,7 @@ func chdir(t *testing.T, dir string, f func()) {
 	defer func() {
 		assert.NoError(t, os.Chdir(cwd))
 	}()
-	assert.NoError(t, os.Chdir(dir))
+	assert.NoError(t, os.Chdir(cwd+"/"+dir))
 	f()
 }
 
