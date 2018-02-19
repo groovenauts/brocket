@@ -19,6 +19,7 @@ func (c *Configuration) GetVersionFromScript() (string, error) {
 	cmd.Dir = c.WorkingDir
 	out, err := cmd.Output()
 	if err != nil {
+		log.Errorf("Failed to execute %q because of \n", c.VersionScript, err)
 		return "", err
 	}
 	return strings.TrimSpace(string(out)), nil
@@ -37,6 +38,7 @@ func (c *Configuration) GetVersionFromFile() (string, error) {
 	}
 	result = strings.TrimSpace(string(bytes))
 	if err != nil {
+		log.Errorf("Failed to strings.TrimSpace %q because of \n", string(bytes), err)
 		return "", err
 	}
 	return result, nil
